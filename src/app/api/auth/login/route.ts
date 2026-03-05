@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
       role: user.role
     });
 
-    setAuthCookie(token);
+    await setAuthCookie(token);
 
     const safeUser: UserSafe = {
       id: String(user._id),

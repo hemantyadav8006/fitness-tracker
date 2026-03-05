@@ -4,18 +4,12 @@ import { apiError, apiOk } from "@/lib/api-response";
 import { WorkoutLog } from "@/models/Workout";
 import { requireUser } from "@/lib/auth";
 
-interface Params {
-  params: {
-    id: string;
-  };
-}
-
-export async function DELETE(req: NextRequest, { params }: Params) {
+export async function DELETE(req: NextRequest, context: { params: Promise<{ id: string }> }) {
   try {
     const user = await requireUser(req);
     await connectToDatabase();
 
-    const { id } = params;
+    const { id } = await context.params;
     await WorkoutLog.deleteOne({ _id: id, userId: user.id });
 
     return apiOk({ deleted: true });

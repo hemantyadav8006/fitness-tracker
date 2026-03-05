@@ -1,4 +1,4 @@
-/** PostCSS config used by TailwindCSS. */
+/** PostCSS config used by TailwindCSS v3. */
 
 const config = {
   plugins: {

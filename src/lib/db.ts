@@ -27,7 +27,7 @@ declare global {
 
 const globalCache = global._mongooseCache || {
   conn: null,
-  promise: null
+  promise: null,
 };
 
 global._mongooseCache = globalCache;
@@ -39,12 +39,11 @@ export async function connectToDatabase(): Promise<typeof mongoose> {
 
   if (!globalCache.promise) {
     mongoose.set("strictQuery", true);
-    globalCache.promise = mongoose.connect(MONGODB_URI, {
-      maxPoolSize: 10
+    globalCache.promise = mongoose.connect(MONGODB_URI as string, {
+      maxPoolSize: 10,
     });
   }
 
   globalCache.conn = await globalCache.promise;
   return globalCache.conn;
 }
-

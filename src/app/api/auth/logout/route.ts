@@ -4,7 +4,7 @@ import { clearAuthCookie } from "@/lib/auth";
 
 export async function POST(_req: NextRequest) {
   try {
-    clearAuthCookie();
+    await clearAuthCookie();
     return apiOk({ message: "Logged out" });
   } catch (err) {
     console.error(err);

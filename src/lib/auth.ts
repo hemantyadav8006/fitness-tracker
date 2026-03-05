@@ -6,7 +6,7 @@ import { connectToDatabase } from "./db";
 import { User } from "@/models/User";
 import type { UserSafe, UserRole } from "@/types/domain";
 
-const JWT_SECRET = process.env.JWT_SECRET;
+const JWT_SECRET = process.env.JWT_SECRET as string;
 const BCRYPT_SALT_ROUNDS = Number(process.env.BCRYPT_SALT_ROUNDS ?? "10");
 
 if (!JWT_SECRET) {
@@ -40,33 +40,36 @@ export function verifyAuthToken(token: string): JwtPayload | null {
   }
 }
 
-export function setAuthCookie(token: string): void {
-  const cookieStore = cookies();
+export async function setAuthCookie(token: string): Promise<void> {
+  const cookieStore = await cookies();
   cookieStore.set("auth_token", token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
     path: "/",
-    maxAge: 60 * 60 * 24 * 7 // 7 days
+    maxAge: 60 * 60 * 24 * 7, // 7 days
   });
 }
 
-export function clearAuthCookie(): void {
-  const cookieStore = cookies();
+export async function clearAuthCookie(): Promise<void> {
+  const cookieStore = await cookies();
   cookieStore.set("auth_token", "", {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
     path: "/",
-    maxAge: 0
+    maxAge: 0,
   });
 }
 
-export async function getUserFromRequest(req?: NextRequest): Promise<UserSafe | null> {
+export async function getUserFromRequest(
+  req?: NextRequest,
+): Promise<UserSafe | null> {
+  const cookieStore = await cookies();
   const token =
     req?.cookies.get("auth_token")?.value ??
     // fallback to server cookie store when used in server components
-    cookies().get("auth_token")?.value;
+    cookieStore.get("auth_token")?.value;
 
   if (!token) return null;
 
@@ -81,7 +84,7 @@ export async function getUserFromRequest(req?: NextRequest): Promise<UserSafe | 
   return {
     id: String(user._id),
     username: user.username,
-    role: user.role
+    role: user.role,
   };
 }
 
@@ -92,4 +95,3 @@ export async function requireUser(req?: NextRequest): Promise<UserSafe> {
   }
   return user;
 }
-

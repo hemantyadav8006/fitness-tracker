@@ -4,6 +4,9 @@ import { Habit, HabitEntry } from "@/models/Habit";
 import { HabitForm } from "@/components/habits/HabitForm";
 import { HabitTodayForm } from "@/components/habits/HabitTodayForm";
 import type { HabitDTO } from "@/types/domain";
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { HabitHeatmap } from "@/components/habits/HabitHeatmap";
 
 export default async function HabitsPage() {
   const user = await getUserFromRequest();
@@ -37,52 +40,69 @@ export default async function HabitsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold">Habits</h1>
-        <p className="text-sm text-gray-600 dark:text-gray-300">
-          Overview of your habits and recent completion entries.
+        <h1 className="text-3xl font-semibold tracking-tight">Habits</h1>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Build consistent routines and see your streaks at a glance.
         </p>
       </div>
 
-      <section className="card space-y-4 p-4">
-        <h2 className="text-sm font-semibold">Create habit</h2>
-        <HabitForm />
-      </section>
+      <div className="grid gap-4 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)]">
+        <Card className="space-y-4 p-4 sm:p-5">
+          <div className="flex items-center justify-between gap-2">
+            <h2 className="text-sm font-semibold">Create habit</h2>
+            <Badge variant="outline">New routine</Badge>
+          </div>
+          <HabitForm />
+        </Card>
 
-      <section className="card space-y-4 p-4">
-        <h2 className="text-sm font-semibold">Today&apos;s completion</h2>
-        <HabitTodayForm habits={habitDtos} />
-      </section>
+        <Card className="space-y-4 p-4 sm:p-5">
+          <div className="flex items-center justify-between gap-2">
+            <h2 className="text-sm font-semibold">Today&apos;s completion</h2>
+            <Badge variant="outline">Daily check-in</Badge>
+          </div>
+          <HabitTodayForm habits={habitDtos} />
+        </Card>
+      </div>
 
-      <section className="card p-4">
-        <h2 className="mb-3 text-sm font-semibold">Habits & recent entries</h2>
+      <Card className="p-4 sm:p-5">
+        <div className="mb-3 flex items-center justify-between gap-2">
+          <h2 className="text-sm font-semibold">Habits & recent entries</h2>
+          <Badge variant="outline">Last 30 days</Badge>
+        </div>
         {habits.length === 0 ? (
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-muted-foreground">
             No habits yet. Use the form above to create your first habit.
           </p>
         ) : (
-          <ul className="space-y-3 text-sm">
+          <div className="grid gap-4 md:grid-cols-2">
             {habits.map((habit) => {
               const habitEntries = entriesByHabit.get(String(habit._id)) ?? [];
               return (
-                <li key={String(habit._id)} className="border-b border-border pb-3 last:border-b-0">
-                  <div className="flex items-center justify-between">
+                <div
+                  key={String(habit._id)}
+                  className="space-y-3 rounded-2xl border border-border/60 bg-background/40 p-3"
+                >
+                  <div className="flex items-start justify-between gap-3">
                     <div>
-                      <div className="font-medium">{habit.name}</div>
-                      <div className="text-xs text-gray-500">
+                      <div className="text-sm font-medium">{habit.name}</div>
+                      <div className="text-xs text-muted-foreground">
                         Target: {habit.targetType}
-                        {habit.targetValue != null ? ` (${habit.targetValue})` : ""}
+                        {habit.targetValue != null
+                          ? ` (${habit.targetValue})`
+                          : ""}
                       </div>
                     </div>
-                    <div className="text-xs text-gray-500">
+                    <Badge variant="outline">
                       {habitEntries.length} entries
-                    </div>
+                    </Badge>
                   </div>
-                </li>
+                  <HabitHeatmap entries={habitEntries} />
+                </div>
               );
             })}
-          </ul>
+          </div>
         )}
-      </section>
+      </Card>
     </div>
   );
 }

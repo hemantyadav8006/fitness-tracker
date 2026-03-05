@@ -29,8 +29,10 @@ export function HabitCompletionChart() {
     <ResponsiveContainer width="100%" height={220}>
       <BarChart data={data}>
         <XAxis dataKey="name" tick={{ fontSize: 10 }} />
-        <YAxis tickFormatter={(v) => `${v}%`} tick={{ fontSize: 10 }} />
-        <Tooltip formatter={(v: number) => `${v.toFixed(0)}%`} />
+        <YAxis tickFormatter={(v?: number) => `${v ?? 0}%`} tick={{ fontSize: 10 }} />
+        <Tooltip
+          formatter={(v?: number) => `${((v ?? 0) as number).toFixed(0)}%`}
+        />
         <Bar dataKey="completion" fill="#22c55e" />
       </BarChart>
     </ResponsiveContainer>
