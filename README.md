@@ -1,4 +1,4 @@
-### Live Project [Link](https://fit-track-github.vercel.app/)
+### Live Project [FitTrack](https://fitness-tracker-github.vercel.app/)
 
 ---
 
