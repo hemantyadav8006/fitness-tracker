@@ -11,15 +11,17 @@ export async function GET(req: NextRequest) {
     const user = await requireUser(req);
     await dbConnect();
 
-    const templates = await WorkoutTemplate.find({ userId: user.id }).sort({ name: 1 }).lean();
+    const templates = await WorkoutTemplate.find({ userId: user.id })
+      .sort({ name: 1 })
+      .lean();
 
     const data: WorkoutTemplateDTO[] = templates.map((t) => ({
       _id: String(t._id),
       name: t.name,
       exercises: t.exercises.map((e) => ({
         _id: String(e._id),
-        name: e.name
-      }))
+        name: e.name,
+      })),
     }));
 
     return apiOk(data);
@@ -39,7 +41,10 @@ export async function POST(req: NextRequest) {
     const json = await req.json();
     const parsed = workoutTemplateSchema.safeParse(json);
     if (!parsed.success) {
-      return apiError("Invalid payload", { status: 400, code: "INVALID_PAYLOAD" });
+      return apiError("Invalid payload", {
+        status: 400,
+        code: "INVALID_PAYLOAD",
+      });
     }
 
     await dbConnect();
@@ -47,7 +52,7 @@ export async function POST(req: NextRequest) {
     const created = await WorkoutTemplate.create({
       userId: user.id,
       name: parsed.data.name,
-      exercises: parsed.data.exercises
+      exercises: parsed.data.exercises,
     });
 
     const data: WorkoutTemplateDTO = {
@@ -55,8 +60,8 @@ export async function POST(req: NextRequest) {
       name: created.name,
       exercises: created.exercises.map((e) => ({
         _id: String(e._id),
-        name: e.name
-      }))
+        name: e.name,
+      })),
     };
 
     return apiOk(data, { status: 201 });
@@ -69,4 +74,3 @@ export async function POST(req: NextRequest) {
     return apiError(message, { status: 500, code: "INTERNAL_ERROR" });
   }
 }
-

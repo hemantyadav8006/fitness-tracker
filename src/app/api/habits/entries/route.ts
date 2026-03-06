@@ -19,7 +19,10 @@ export async function GET(req: NextRequest) {
       query.habitId = habitId;
     }
 
-    const entries = await HabitEntry.find(query).sort({ date: -1 }).limit(90).lean();
+    const entries = await HabitEntry.find(query)
+      .sort({ date: -1 })
+      .limit(90)
+      .lean();
 
     const data: HabitEntryDTO[] = entries.map((e) => ({
       _id: String(e._id),
@@ -27,7 +30,7 @@ export async function GET(req: NextRequest) {
       habitId: e.habitId,
       date: e.date.toISOString(),
       value: e.value ?? null,
-      completed: e.completed
+      completed: e.completed,
     }));
 
     return apiOk(data);
@@ -47,7 +50,10 @@ export async function POST(req: NextRequest) {
     const json = await req.json();
     const parsed = habitEntrySchema.safeParse(json);
     if (!parsed.success) {
-      return apiError("Invalid payload", { status: 400, code: "INVALID_PAYLOAD" });
+      return apiError("Invalid payload", {
+        status: 400,
+        code: "INVALID_PAYLOAD",
+      });
     }
 
     await dbConnect();
@@ -56,20 +62,20 @@ export async function POST(req: NextRequest) {
       {
         userId: user.id,
         habitId: parsed.data.habitId,
-        date: new Date(parsed.data.date)
+        date: new Date(parsed.data.date),
       },
       {
         userId: user.id,
         habitId: parsed.data.habitId,
         date: new Date(parsed.data.date),
         value: parsed.data.value,
-        completed: parsed.data.completed
+        completed: parsed.data.completed,
       },
       {
         upsert: true,
         new: true,
-        setDefaultsOnInsert: true
-      }
+        setDefaultsOnInsert: true,
+      },
     ).lean();
 
     const data: HabitEntryDTO = {
@@ -78,7 +84,7 @@ export async function POST(req: NextRequest) {
       habitId: created.habitId,
       date: created.date.toISOString(),
       value: created.value ?? null,
-      completed: created.completed
+      completed: created.completed,
     };
 
     return apiOk(data);
@@ -91,4 +97,3 @@ export async function POST(req: NextRequest) {
     return apiError(message, { status: 500, code: "INTERNAL_ERROR" });
   }
 }
-

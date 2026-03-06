@@ -11,14 +11,16 @@ export async function GET(req: NextRequest) {
     const user = await requireUser(req);
     await dbConnect();
 
-    const habits = await Habit.find({ userId: user.id }).sort({ name: 1 }).lean();
+    const habits = await Habit.find({ userId: user.id })
+      .sort({ name: 1 })
+      .lean();
 
     const data: HabitDTO[] = habits.map((h) => ({
       _id: String(h._id),
       userId: h.userId,
       name: h.name,
       targetType: h.targetType,
-      targetValue: h.targetValue ?? null
+      targetValue: h.targetValue ?? null,
     }));
 
     return apiOk(data);
@@ -38,14 +40,17 @@ export async function POST(req: NextRequest) {
     const json = await req.json();
     const parsed = habitSchema.safeParse(json);
     if (!parsed.success) {
-      return apiError("Invalid payload", { status: 400, code: "INVALID_PAYLOAD" });
+      return apiError("Invalid payload", {
+        status: 400,
+        code: "INVALID_PAYLOAD",
+      });
     }
 
     await dbConnect();
 
     const created = await Habit.create({
       userId: user.id,
-      ...parsed.data
+      ...parsed.data,
     });
 
     const data: HabitDTO = {
@@ -53,7 +58,7 @@ export async function POST(req: NextRequest) {
       userId: created.userId,
       name: created.name,
       targetType: created.targetType,
-      targetValue: created.targetValue ?? null
+      targetValue: created.targetValue ?? null,
     };
 
     return apiOk(data, { status: 201 });
@@ -66,4 +71,3 @@ export async function POST(req: NextRequest) {
     return apiError(message, { status: 500, code: "INTERNAL_ERROR" });
   }
 }
-

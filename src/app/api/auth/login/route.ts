@@ -11,7 +11,10 @@ export async function POST(req: NextRequest) {
     const json = await req.json();
     const parsed = loginSchema.safeParse(json);
     if (!parsed.success) {
-      return apiError("Invalid payload", { status: 400, code: "INVALID_PAYLOAD" });
+      return apiError("Invalid payload", {
+        status: 400,
+        code: "INVALID_PAYLOAD",
+      });
     }
 
     const { username, password } = parsed.data;
@@ -20,18 +23,24 @@ export async function POST(req: NextRequest) {
 
     const user = await User.findOne({ username });
     if (!user) {
-      return apiError("Invalid credentials", { status: 401, code: "INVALID_CREDENTIALS" });
+      return apiError("Invalid credentials", {
+        status: 401,
+        code: "INVALID_CREDENTIALS",
+      });
     }
 
     const valid = await verifyPassword(password, user.passwordHash);
     if (!valid) {
-      return apiError("Invalid credentials", { status: 401, code: "INVALID_CREDENTIALS" });
+      return apiError("Invalid credentials", {
+        status: 401,
+        code: "INVALID_CREDENTIALS",
+      });
     }
 
     const token = signAuthToken({
       sub: String(user._id),
       username: user.username,
-      role: user.role
+      role: user.role,
     });
 
     await setAuthCookie(token);
@@ -39,7 +48,7 @@ export async function POST(req: NextRequest) {
     const safeUser: UserSafe = {
       id: String(user._id),
       username: user.username,
-      role: user.role
+      role: user.role,
     };
 
     return apiOk(safeUser);
@@ -49,4 +58,3 @@ export async function POST(req: NextRequest) {
     return apiError(message, { status: 500, code: "INTERNAL_ERROR" });
   }
 }
-

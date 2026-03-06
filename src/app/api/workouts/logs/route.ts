@@ -26,9 +26,9 @@ export async function GET(req: NextRequest) {
         sets: ex.sets.map((set) => ({
           reps: set.reps,
           weight: set.weight,
-          notes: set.notes
-        }))
-      }))
+          notes: set.notes,
+        })),
+      })),
     }));
 
     return apiOk(data);
@@ -48,7 +48,10 @@ export async function POST(req: NextRequest) {
     const json = await req.json();
     const parsed = workoutLogSchema.safeParse(json);
     if (!parsed.success) {
-      return apiError("Invalid payload", { status: 400, code: "INVALID_PAYLOAD" });
+      return apiError("Invalid payload", {
+        status: 400,
+        code: "INVALID_PAYLOAD",
+      });
     }
 
     await dbConnect();
@@ -56,7 +59,7 @@ export async function POST(req: NextRequest) {
     const created = await WorkoutLog.create({
       userId: user.id,
       date: new Date(parsed.data.date),
-      exercises: parsed.data.exercises
+      exercises: parsed.data.exercises,
     });
 
     const data: WorkoutLogDTO = {
@@ -69,9 +72,9 @@ export async function POST(req: NextRequest) {
         sets: ex.sets.map((set) => ({
           reps: set.reps,
           weight: set.weight,
-          notes: set.notes
-        }))
-      }))
+          notes: set.notes,
+        })),
+      })),
     };
 
     return apiOk(data, { status: 201 });
@@ -84,4 +87,3 @@ export async function POST(req: NextRequest) {
     return apiError(message, { status: 500, code: "INTERNAL_ERROR" });
   }
 }
-

@@ -16,7 +16,7 @@ export async function GET(req: NextRequest) {
 
     const [habits, entries] = await Promise.all([
       Habit.find({ userId: user.id }).lean(),
-      HabitEntry.find({ userId: user.id }).lean()
+      HabitEntry.find({ userId: user.id }).lean(),
     ]);
 
     const byHabit = new Map<
@@ -32,7 +32,7 @@ export async function GET(req: NextRequest) {
       byHabit.set(String(habit._id), {
         name: habit.name,
         total: 0,
-        completed: 0
+        completed: 0,
       });
     }
 
@@ -50,7 +50,7 @@ export async function GET(req: NextRequest) {
       .filter((h) => h.total > 0)
       .map((h) => ({
         name: h.name,
-        completion: h.total === 0 ? 0 : (h.completed / h.total) * 100
+        completion: h.total === 0 ? 0 : (h.completed / h.total) * 100,
       }));
 
     return apiOk(data);
@@ -63,4 +63,3 @@ export async function GET(req: NextRequest) {
     return apiError(message, { status: 500, code: "INTERNAL_ERROR" });
   }
 }
-

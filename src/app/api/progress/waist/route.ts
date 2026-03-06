@@ -10,7 +10,10 @@ export async function GET(req: NextRequest) {
     const user = await requireUser(req);
     await dbConnect();
 
-    const entries = await ProgressEntry.find({ userId: user.id, waist: { $ne: null } })
+    const entries = await ProgressEntry.find({
+      userId: user.id,
+      waist: { $ne: null },
+    })
       .sort({ date: 1 })
       .lean();
 
@@ -20,7 +23,7 @@ export async function GET(req: NextRequest) {
       date: e.date.toISOString(),
       weight: e.weight ?? null,
       waist: e.waist ?? null,
-      notes: e.notes
+      notes: e.notes,
     }));
 
     return apiOk(data);
@@ -33,4 +36,3 @@ export async function GET(req: NextRequest) {
     return apiError(message, { status: 500, code: "INTERNAL_ERROR" });
   }
 }
-

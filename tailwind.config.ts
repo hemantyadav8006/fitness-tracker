@@ -6,7 +6,7 @@ const config: Config = {
     "./src/app/**/*.{ts,tsx}",
     "./src/components/**/*.{ts,tsx}",
     "./src/hooks/**/*.{ts,tsx}",
-    "./src/utils/**/*.{ts,tsx}"
+    "./src/utils/**/*.{ts,tsx}",
   ],
   theme: {
     extend: {
@@ -16,14 +16,13 @@ const config: Config = {
         muted: "hsl(210 20% 96%)",
         primary: {
           DEFAULT: "hsl(222 84% 56%)",
-          foreground: "hsl(0 0% 100%)"
+          foreground: "hsl(0 0% 100%)",
         },
-        border: "hsl(214 32% 91%)"
-      }
-    }
+        border: "hsl(214 32% 91%)",
+      },
+    },
   },
-  plugins: []
+  plugins: [],
 };
 
 export default config;
-

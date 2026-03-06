@@ -34,10 +34,14 @@ export function ProgressEntries({ entries }: Props) {
                 {new Date(e.date).toLocaleDateString()}
               </div>
               <div className="text-xs text-gray-500">
-                {e.weight != null && <span className="mr-3">Weight: {e.weight} kg</span>}
+                {e.weight != null && (
+                  <span className="mr-3">Weight: {e.weight} kg</span>
+                )}
                 {e.waist != null && <span>Waist: {e.waist} cm</span>}
               </div>
-              {e.notes && <div className="mt-1 text-xs text-gray-600">{e.notes}</div>}
+              {e.notes && (
+                <div className="mt-1 text-xs text-gray-600">{e.notes}</div>
+              )}
             </div>
             <button
               type="button"
@@ -52,4 +56,3 @@ export function ProgressEntries({ entries }: Props) {
     </ul>
   );
 }
-

@@ -6,19 +6,22 @@ import type { ApiResponse } from "@/types/api";
  * Keeps the JSON envelope and typing identical across all route handlers.
  */
 
-export function apiOk<T>(data: T, init?: ResponseInit): NextResponse<ApiResponse<T>> {
+export function apiOk<T>(
+  data: T,
+  init?: ResponseInit,
+): NextResponse<ApiResponse<T>> {
   return NextResponse.json<ApiResponse<T>>(
     {
       success: true,
-      data
+      data,
     },
-    init
+    init,
   );
 }
 
 export function apiError(
   message: string,
-  options?: { status?: number; code?: string }
+  options?: { status?: number; code?: string },
 ): NextResponse<ApiResponse<null>> {
   const status = options?.status ?? 400;
   return NextResponse.json<ApiResponse<null>>(
@@ -26,10 +29,9 @@ export function apiError(
       success: false,
       error: {
         message,
-        code: options?.code
-      }
+        code: options?.code,
+      },
     },
-    { status }
+    { status },
   );
 }
-

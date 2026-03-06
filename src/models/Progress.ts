@@ -28,11 +28,11 @@ const ProgressEntrySchema = new Schema<ProgressEntryDocument>(
     date: { type: Date, required: true, index: true },
     weight: { type: Number },
     waist: { type: Number },
-    notes: { type: String }
+    notes: { type: String },
   },
   {
-    timestamps: true
-  }
+    timestamps: true,
+  },
 );
 
 ProgressEntrySchema.index({ userId: 1, date: 1 }, { unique: true });
@@ -43,14 +43,19 @@ const PersonalRecordSchema = new Schema<PersonalRecordDocument>(
     exerciseName: { type: String, required: true },
     maxWeight: { type: Number, required: true },
     reps: { type: Number, required: true },
-    date: { type: Date, required: true }
+    date: { type: Date, required: true },
   },
   {
-    timestamps: true
-  }
+    timestamps: true,
+  },
 );
 
-PersonalRecordSchema.index({ userId: 1, exerciseName: 1, maxWeight: -1, reps: -1 });
+PersonalRecordSchema.index({
+  userId: 1,
+  exerciseName: 1,
+  maxWeight: -1,
+  reps: -1,
+});
 
 export const ProgressEntry: Model<ProgressEntryDocument> =
   (models.ProgressEntry as Model<ProgressEntryDocument>) ||
@@ -59,4 +64,3 @@ export const ProgressEntry: Model<ProgressEntryDocument> =
 export const PersonalRecord: Model<PersonalRecordDocument> =
   (models.PersonalRecord as Model<PersonalRecordDocument>) ||
   model<PersonalRecordDocument>("PersonalRecord", PersonalRecordSchema);
-

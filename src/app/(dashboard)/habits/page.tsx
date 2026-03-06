@@ -18,7 +18,7 @@ export default async function HabitsPage() {
 
   const [habits, entries] = await Promise.all([
     Habit.find({ userId: user.id }).sort({ name: 1 }).lean(),
-    HabitEntry.find({ userId: user.id }).sort({ date: -1 }).limit(90).lean()
+    HabitEntry.find({ userId: user.id }).sort({ date: -1 }).limit(90).lean(),
   ]);
 
   const entriesByHabit = new Map<string, typeof entries>();
@@ -34,7 +34,7 @@ export default async function HabitsPage() {
     userId: h.userId,
     name: h.name,
     targetType: h.targetType,
-    targetValue: h.targetValue ?? null
+    targetValue: h.targetValue ?? null,
   }));
 
   return (
@@ -106,4 +106,3 @@ export default async function HabitsPage() {
     </div>
   );
 }
-

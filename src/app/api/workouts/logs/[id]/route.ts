@@ -4,7 +4,10 @@ import { apiError, apiOk } from "@/lib/api-response";
 import { WorkoutLog } from "@/models/Workout";
 import { requireUser } from "@/lib/auth";
 
-export async function DELETE(req: NextRequest, context: { params: Promise<{ id: string }> }) {
+export async function DELETE(
+  req: NextRequest,
+  context: { params: Promise<{ id: string }> },
+) {
   try {
     const user = await requireUser(req);
     await dbConnect();
@@ -22,4 +25,3 @@ export async function DELETE(req: NextRequest, context: { params: Promise<{ id: 
     return apiError(message, { status: 500, code: "INTERNAL_ERROR" });
   }
 }
-

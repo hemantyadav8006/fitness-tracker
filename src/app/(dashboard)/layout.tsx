@@ -21,13 +21,13 @@ export default async function DashboardLayout({
   const user = await getUserFromRequest();
 
   if (!user) {
-    redirect("/login");
+    redirect("/");
   }
 
   async function handleLogout() {
     "use server";
     await clearAuthCookie();
-    redirect("/login");
+    redirect("/");
   }
 
   return (

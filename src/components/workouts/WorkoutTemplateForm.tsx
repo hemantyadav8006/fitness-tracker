@@ -26,8 +26,8 @@ export function WorkoutTemplateForm() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name,
-          exercises: exerciseNames.map((n) => ({ name: n }))
-        })
+          exercises: exerciseNames.map((n) => ({ name: n })),
+        }),
       });
       const json = await res.json();
       if (!res.ok || !json.success) {
@@ -58,7 +58,9 @@ export function WorkoutTemplateForm() {
         />
       </div>
       <div>
-        <label className="mb-1 block text-xs font-medium">Exercises (comma-separated)</label>
+        <label className="mb-1 block text-xs font-medium">
+          Exercises (comma-separated)
+        </label>
         <input
           className="input"
           value={exercises}
@@ -74,4 +76,3 @@ export function WorkoutTemplateForm() {
     </form>
   );
 }
-

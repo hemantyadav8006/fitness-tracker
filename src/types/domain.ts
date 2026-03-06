@@ -72,4 +72,3 @@ export interface PersonalRecordDTO {
   reps: number;
   date: string;
 }
-

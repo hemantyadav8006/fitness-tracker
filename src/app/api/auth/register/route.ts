@@ -11,7 +11,10 @@ export async function POST(req: NextRequest) {
     const json = await req.json();
     const parsed = registerSchema.safeParse(json);
     if (!parsed.success) {
-      return apiError("Invalid payload", { status: 400, code: "INVALID_PAYLOAD" });
+      return apiError("Invalid payload", {
+        status: 400,
+        code: "INVALID_PAYLOAD",
+      });
     }
 
     const { username, email, password } = parsed.data;
@@ -24,10 +27,16 @@ export async function POST(req: NextRequest) {
     ]);
 
     if (existingUsername) {
-      return apiError("Username already taken", { status: 409, code: "USERNAME_TAKEN" });
+      return apiError("Username already taken", {
+        status: 409,
+        code: "USERNAME_TAKEN",
+      });
     }
     if (existingEmail) {
-      return apiError("Email already in use", { status: 409, code: "EMAIL_TAKEN" });
+      return apiError("Email already in use", {
+        status: 409,
+        code: "EMAIL_TAKEN",
+      });
     }
 
     const passwordHash = await hashPassword(password);
@@ -36,13 +45,13 @@ export async function POST(req: NextRequest) {
       username,
       email: email.toLowerCase(),
       passwordHash,
-      role: "user"
+      role: "user",
     });
 
     const token = signAuthToken({
       sub: String(user._id),
       username: user.username,
-      role: user.role
+      role: user.role,
     });
 
     await setAuthCookie(token);
@@ -50,7 +59,7 @@ export async function POST(req: NextRequest) {
     const safeUser: UserSafe = {
       id: String(user._id),
       username: user.username,
-      role: user.role
+      role: user.role,
     };
 
     return apiOk(safeUser, { status: 201 });
@@ -60,4 +69,3 @@ export async function POST(req: NextRequest) {
     return apiError(message, { status: 500, code: "INTERNAL_ERROR" });
   }
 }
-

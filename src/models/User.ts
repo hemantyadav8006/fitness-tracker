@@ -20,13 +20,13 @@ const UserSchema = new Schema<UserDocument>(
     passwordHash: { type: String, required: true },
     role: { type: String, enum: ["user", "admin"], default: "user" },
     resetPasswordOTP: { type: String, required: false, index: true },
-    resetPasswordOTPExpire: { type: Date, required: false }
+    resetPasswordOTPExpire: { type: Date, required: false },
   },
   {
-    timestamps: true
-  }
+    timestamps: true,
+  },
 );
 
 export const User: Model<UserDocument> =
-  (models.User as Model<UserDocument>) || model<UserDocument>("User", UserSchema);
-
+  (models.User as Model<UserDocument>) ||
+  model<UserDocument>("User", UserSchema);

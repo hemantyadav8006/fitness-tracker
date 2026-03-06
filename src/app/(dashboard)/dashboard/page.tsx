@@ -21,7 +21,7 @@ export default async function DashboardPage() {
   const [workoutCount, habitEntryCount, latestProgress] = await Promise.all([
     WorkoutLog.countDocuments({ userId: user.id }),
     HabitEntry.countDocuments({ userId: user.id }),
-    ProgressEntry.findOne({ userId: user.id }).sort({ date: -1 }).lean()
+    ProgressEntry.findOne({ userId: user.id }).sort({ date: -1 }).lean(),
   ]);
 
   return (
@@ -74,4 +74,3 @@ export default async function DashboardPage() {
     </div>
   );
 }
-

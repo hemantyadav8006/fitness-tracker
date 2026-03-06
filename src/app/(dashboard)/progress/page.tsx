@@ -14,7 +14,10 @@ export default async function ProgressPage() {
 
   await dbConnect();
 
-  const entries = await ProgressEntry.find({ userId: user.id }).sort({ date: -1 }).limit(60).lean();
+  const entries = await ProgressEntry.find({ userId: user.id })
+    .sort({ date: -1 })
+    .limit(60)
+    .lean();
 
   const serialized: ProgressEntryDTO[] = entries.map((e) => ({
     _id: String(e._id),
@@ -22,7 +25,7 @@ export default async function ProgressPage() {
     date: e.date.toISOString(),
     weight: e.weight ?? null,
     waist: e.waist ?? null,
-    notes: e.notes
+    notes: e.notes,
   }));
 
   return (
@@ -46,4 +49,3 @@ export default async function ProgressPage() {
     </div>
   );
 }
-

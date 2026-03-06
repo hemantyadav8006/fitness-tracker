@@ -1,45 +1,50 @@
-# Fitness Tracker – Next.js App
+### Live Project [Link](https://fit-track-github.vercel.app/)
 
-A minimal, production-ready fitness tracking web app built with **Next.js App Router**, **TypeScript (strict)**, **Tailwind CSS**, **MongoDB/Mongoose**, **JWT auth**, and **Recharts**.
+---
 
-### Tech stack
+## Getting Started
 
-- **Frontend**: Next.js 16 App Router, React 19, Tailwind CSS, Recharts
-- **Backend**: Next.js route handlers (serverless-friendly), MongoDB, Mongoose
-- **Auth**: Username/password, bcrypt hashing, JWT in HTTP-only cookie
-- **Validation**: Zod schemas shared across API routes
-
-### Folder structure (high level)
-
-- `src/app/` – App Router pages and layouts
-  - `(auth)/` – Public auth routes (`/login`, `/register`)
-  - `(dashboard)/` – Protected dashboard routes (`/dashboard/*`)
-  - `api/` – All API route handlers (`/api/auth/*`, `/api/workouts/*`, `/api/habits/*`, `/api/progress/*`)
-- `src/components/` – Reusable UI components and Recharts charts
-- `src/lib/` – Cross-cutting concerns (`db` connection, `auth` helpers, `validation`, API response helpers)
-- `src/models/` – Mongoose models for all entities
-- `src/types/` – Shared TypeScript domain and API types
-
-### Environment variables
-
-Copy `.env.example` to `.env.local` and set:
-
-- `MONGODB_URI` – MongoDB connection string
-- `JWT_SECRET` – Long random secret for JWT signing
-- `BCRYPT_SALT_ROUNDS` – Bcrypt cost factor (e.g. 10–12)
-
-### Running locally
+First, Clone the repo
 
 ```bash
-pnpm install # or npm install / yarn
-pnpm dev
+git clone https://github.com/hemantyadav8006/fitness-tracker.git
 ```
 
-Then open `http://localhost:3000`.
+---
 
-### Deployment
+Second, run the development server:
 
-Deploy directly to Vercel:
+```bash
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
+```
 
-- Set environment variables in the Vercel dashboard
-- Use the default **Build Command** (`next build`) and **Output Directory** (`.next`)
+---
+
+#### Environment variables you need for this project
+
+```docs
+# MongoDB credentials
+MONGODB_URI=
+
+# JWT secret
+JWT_SECRET=
+
+# Bcrypt salt rounds
+BCRYPT_SALT_ROUNDS=
+
+
+# Email credentials
+EMAIL_HOST=
+EMAIL_PORT=
+EMAIL_USER=
+EMAIL_PASS=
+EMAIL_FROM=
+```
+
+---

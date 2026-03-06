@@ -14,7 +14,9 @@ export async function GET(req: NextRequest) {
     const user = await requireUser(req);
     await dbConnect();
 
-    const logs = await WorkoutLog.find({ userId: user.id }).sort({ date: 1 }).lean();
+    const logs = await WorkoutLog.find({ userId: user.id })
+      .sort({ date: 1 })
+      .lean();
 
     const byDay = new Map<string, number>();
     for (const log of logs) {
@@ -22,10 +24,12 @@ export async function GET(req: NextRequest) {
       byDay.set(key, (byDay.get(key) ?? 0) + 1);
     }
 
-    const data: ChartPoint[] = Array.from(byDay.entries()).map(([date, count]) => ({
-      date,
-      workouts: count
-    }));
+    const data: ChartPoint[] = Array.from(byDay.entries()).map(
+      ([date, count]) => ({
+        date,
+        workouts: count,
+      }),
+    );
 
     return apiOk(data);
   } catch (err) {
@@ -37,4 +41,3 @@ export async function GET(req: NextRequest) {
     return apiError(message, { status: 500, code: "INTERNAL_ERROR" });
   }
 }
-

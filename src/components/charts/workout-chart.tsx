@@ -58,7 +58,11 @@ export function WorkoutFrequencyChart() {
       </div>
       <ResponsiveContainer width="100%" height="100%">
         <BarChart data={data}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#e4e4e7" vertical={false} />
+          <CartesianGrid
+            strokeDasharray="3 3"
+            stroke="#e4e4e7"
+            vertical={false}
+          />
           <XAxis
             dataKey="label"
             tickLine={false}
@@ -95,4 +99,3 @@ export function WorkoutFrequencyChart() {
     </Card>
   );
 }
-

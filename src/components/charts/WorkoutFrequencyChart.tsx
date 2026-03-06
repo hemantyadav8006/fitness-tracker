@@ -1,7 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import {
+  Bar,
+  BarChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
 
 interface ChartPoint {
   date: string;
@@ -14,7 +21,10 @@ export function WorkoutFrequencyChart() {
   useEffect(() => {
     async function load() {
       const res = await fetch("/api/workouts/frequency");
-      const json = (await res.json()) as { success: boolean; data?: ChartPoint[] };
+      const json = (await res.json()) as {
+        success: boolean;
+        data?: ChartPoint[];
+      };
       if (!json.success || !json.data) return;
       setData(json.data);
     }
@@ -36,4 +46,3 @@ export function WorkoutFrequencyChart() {
     </ResponsiveContainer>
   );
 }
-

@@ -16,7 +16,7 @@ export default async function WorkoutsPage() {
 
   const [templates, logs] = await Promise.all([
     WorkoutTemplate.find({ userId: user.id }).sort({ name: 1 }).lean(),
-    WorkoutLog.find({ userId: user.id }).sort({ date: -1 }).limit(20).lean()
+    WorkoutLog.find({ userId: user.id }).sort({ date: -1 }).limit(20).lean(),
   ]);
 
   return (
@@ -124,4 +124,3 @@ export default async function WorkoutsPage() {
     </div>
   );
 }
-

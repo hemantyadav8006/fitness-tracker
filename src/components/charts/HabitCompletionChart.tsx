@@ -1,7 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import {
+  Bar,
+  BarChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
 
 interface ChartPoint {
   name: string;
@@ -14,7 +21,10 @@ export function HabitCompletionChart() {
   useEffect(() => {
     async function load() {
       const res = await fetch("/api/habits/completion");
-      const json = (await res.json()) as { success: boolean; data?: ChartPoint[] };
+      const json = (await res.json()) as {
+        success: boolean;
+        data?: ChartPoint[];
+      };
       if (!json.success || !json.data) return;
       setData(json.data);
     }
@@ -29,7 +39,10 @@ export function HabitCompletionChart() {
     <ResponsiveContainer width="100%" height={220}>
       <BarChart data={data}>
         <XAxis dataKey="name" tick={{ fontSize: 10 }} />
-        <YAxis tickFormatter={(v?: number) => `${v ?? 0}%`} tick={{ fontSize: 10 }} />
+        <YAxis
+          tickFormatter={(v?: number) => `${v ?? 0}%`}
+          tick={{ fontSize: 10 }}
+        />
         <Tooltip
           formatter={(v?: number) => `${((v ?? 0) as number).toFixed(0)}%`}
         />
@@ -38,4 +51,3 @@ export function HabitCompletionChart() {
     </ResponsiveContainer>
   );
 }
-

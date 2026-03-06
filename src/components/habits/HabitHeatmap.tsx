@@ -18,9 +18,7 @@ export function HabitHeatmap({ entries }: HabitHeatmapProps) {
   const days = 30;
 
   const entryDates = new Set(
-    entries.map((e) =>
-      new Date(e.date).toISOString().slice(0, 10),
-    ),
+    entries.map((e) => new Date(e.date).toISOString().slice(0, 10)),
   );
 
   const cells: Cell[] = [];
@@ -53,5 +51,3 @@ export function HabitHeatmap({ entries }: HabitHeatmapProps) {
     </div>
   );
 }
-
-

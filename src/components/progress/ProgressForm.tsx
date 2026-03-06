@@ -5,7 +5,9 @@ import { useRouter } from "next/navigation";
 
 export function ProgressForm() {
   const router = useRouter();
-  const [date, setDate] = useState<string>(new Date().toISOString().slice(0, 10));
+  const [date, setDate] = useState<string>(
+    new Date().toISOString().slice(0, 10),
+  );
   const [weight, setWeight] = useState<string>("");
   const [waist, setWaist] = useState<string>("");
   const [notes, setNotes] = useState<string>("");
@@ -25,8 +27,8 @@ export function ProgressForm() {
           date,
           weight: weight ? Number(weight) : null,
           waist: waist ? Number(waist) : null,
-          notes: notes || undefined
-        })
+          notes: notes || undefined,
+        }),
       });
       const json = await res.json();
       if (!res.ok || !json.success) {
@@ -91,4 +93,3 @@ export function ProgressForm() {
     </form>
   );
 }
-

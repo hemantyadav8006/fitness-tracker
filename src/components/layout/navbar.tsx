@@ -43,4 +43,3 @@ export function Navbar({ username, rightSlot }: NavbarProps) {
     </header>
   );
 }
-

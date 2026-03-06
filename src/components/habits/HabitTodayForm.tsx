@@ -30,8 +30,8 @@ export function HabitTodayForm({ habits }: Props) {
           habitId,
           date: today,
           value: value ? Number(value) : null,
-          completed
-        })
+          completed,
+        }),
       });
       const json = await res.json();
       if (!res.ok || !json.success) {
@@ -48,7 +48,11 @@ export function HabitTodayForm({ habits }: Props) {
   }
 
   if (habits.length === 0) {
-    return <p className="text-sm text-gray-500">Create a habit first to track today.</p>;
+    return (
+      <p className="text-sm text-gray-500">
+        Create a habit first to track today.
+      </p>
+    );
   }
 
   const selectedHabit = habits.find((h) => h._id === habitId);
@@ -98,4 +102,3 @@ export function HabitTodayForm({ habits }: Props) {
     </form>
   );
 }
-

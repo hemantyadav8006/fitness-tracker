@@ -5,7 +5,9 @@ import { useRouter } from "next/navigation";
 
 export function WorkoutQuickLogForm() {
   const router = useRouter();
-  const [date, setDate] = useState<string>(new Date().toISOString().slice(0, 10));
+  const [date, setDate] = useState<string>(
+    new Date().toISOString().slice(0, 10),
+  );
   const [exerciseName, setExerciseName] = useState("");
   const [reps, setReps] = useState<string>("10");
   const [weight, setWeight] = useState<string>("50");
@@ -31,12 +33,12 @@ export function WorkoutQuickLogForm() {
                 {
                   reps: Number(reps),
                   weight: Number(weight),
-                  notes: notes || undefined
-                }
-              ]
-            }
-          ]
-        })
+                  notes: notes || undefined,
+                },
+              ],
+            },
+          ],
+        }),
       });
       const json = await res.json();
       if (!res.ok || !json.success) {
@@ -96,7 +98,9 @@ export function WorkoutQuickLogForm() {
         </div>
       </div>
       <div>
-        <label className="mb-1 block text-xs font-medium">Notes (optional)</label>
+        <label className="mb-1 block text-xs font-medium">
+          Notes (optional)
+        </label>
         <input
           className="input"
           value={notes}
@@ -110,4 +114,3 @@ export function WorkoutQuickLogForm() {
     </form>
   );
 }
-

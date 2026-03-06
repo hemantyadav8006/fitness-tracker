@@ -6,7 +6,9 @@ import { useRouter } from "next/navigation";
 export function HabitForm() {
   const router = useRouter();
   const [name, setName] = useState("");
-  const [targetType, setTargetType] = useState<"boolean" | "numeric">("boolean");
+  const [targetType, setTargetType] = useState<"boolean" | "numeric">(
+    "boolean",
+  );
   const [targetValue, setTargetValue] = useState<string>("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -23,8 +25,11 @@ export function HabitForm() {
         body: JSON.stringify({
           name,
           targetType,
-          targetValue: targetType === "numeric" && targetValue ? Number(targetValue) : null
-        })
+          targetValue:
+            targetType === "numeric" && targetValue
+              ? Number(targetValue)
+              : null,
+        }),
       });
       const json = await res.json();
       if (!res.ok || !json.success) {
@@ -60,14 +65,18 @@ export function HabitForm() {
           <select
             className="input"
             value={targetType}
-            onChange={(e) => setTargetType(e.target.value as "boolean" | "numeric")}
+            onChange={(e) =>
+              setTargetType(e.target.value as "boolean" | "numeric")
+            }
           >
             <option value="boolean">Boolean (completed / not)</option>
             <option value="numeric">Numeric</option>
           </select>
         </div>
         <div>
-          <label className="mb-1 block text-xs font-medium">Target value (optional)</label>
+          <label className="mb-1 block text-xs font-medium">
+            Target value (optional)
+          </label>
           <input
             className="input"
             type="number"
@@ -84,4 +93,3 @@ export function HabitForm() {
     </form>
   );
 }
-

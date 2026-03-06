@@ -1,7 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import {
+  Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
 import type { ProgressEntryDTO } from "@/types/domain";
 
 interface ChartPoint {
@@ -15,13 +22,16 @@ export function WeightProgressChart() {
   useEffect(() => {
     async function load() {
       const res = await fetch("/api/progress/weight");
-      const json = (await res.json()) as { success: boolean; data?: ProgressEntryDTO[] };
+      const json = (await res.json()) as {
+        success: boolean;
+        data?: ProgressEntryDTO[];
+      };
       if (!json.success || !json.data) return;
       const mapped: ChartPoint[] = json.data
         .filter((e) => e.weight != null)
         .map((e) => ({
           date: new Date(e.date).toLocaleDateString(),
-          weight: e.weight ?? 0
+          weight: e.weight ?? 0,
         }));
       setData(mapped);
     }
@@ -38,9 +48,14 @@ export function WeightProgressChart() {
         <XAxis dataKey="date" tick={{ fontSize: 10 }} />
         <YAxis tick={{ fontSize: 10 }} />
         <Tooltip />
-        <Line type="monotone" dataKey="weight" stroke="#3b82f6" strokeWidth={2} dot={false} />
+        <Line
+          type="monotone"
+          dataKey="weight"
+          stroke="#3b82f6"
+          strokeWidth={2}
+          dot={false}
+        />
       </LineChart>
     </ResponsiveContainer>
   );
 }
-

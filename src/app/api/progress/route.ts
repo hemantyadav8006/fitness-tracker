@@ -11,7 +11,10 @@ export async function GET(req: NextRequest) {
     const user = await requireUser(req);
     await dbConnect();
 
-    const entries = await ProgressEntry.find({ userId: user.id }).sort({ date: -1 }).limit(60).lean();
+    const entries = await ProgressEntry.find({ userId: user.id })
+      .sort({ date: -1 })
+      .limit(60)
+      .lean();
 
     const data: ProgressEntryDTO[] = entries.map((e) => ({
       _id: String(e._id),
@@ -19,7 +22,7 @@ export async function GET(req: NextRequest) {
       date: e.date.toISOString(),
       weight: e.weight ?? null,
       waist: e.waist ?? null,
-      notes: e.notes
+      notes: e.notes,
     }));
 
     return apiOk(data);
@@ -39,7 +42,10 @@ export async function POST(req: NextRequest) {
     const json = await req.json();
     const parsed = progressEntrySchema.safeParse(json);
     if (!parsed.success) {
-      return apiError("Invalid payload", { status: 400, code: "INVALID_PAYLOAD" });
+      return apiError("Invalid payload", {
+        status: 400,
+        code: "INVALID_PAYLOAD",
+      });
     }
 
     await dbConnect();
@@ -47,20 +53,20 @@ export async function POST(req: NextRequest) {
     const created = await ProgressEntry.findOneAndUpdate(
       {
         userId: user.id,
-        date: new Date(parsed.data.date)
+        date: new Date(parsed.data.date),
       },
       {
         userId: user.id,
         date: new Date(parsed.data.date),
         weight: parsed.data.weight,
         waist: parsed.data.waist,
-        notes: parsed.data.notes
+        notes: parsed.data.notes,
       },
       {
         upsert: true,
         new: true,
-        setDefaultsOnInsert: true
-      }
+        setDefaultsOnInsert: true,
+      },
     ).lean();
 
     const data: ProgressEntryDTO = {
@@ -69,7 +75,7 @@ export async function POST(req: NextRequest) {
       date: created.date.toISOString(),
       weight: created.weight ?? null,
       waist: created.waist ?? null,
-      notes: created.notes
+      notes: created.notes,
     };
 
     return apiOk(data);
@@ -82,4 +88,3 @@ export async function POST(req: NextRequest) {
     return apiError(message, { status: 500, code: "INTERNAL_ERROR" });
   }
 }
-

@@ -7,16 +7,18 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint .",
-    "typecheck": "npx tsc --noEmit"
+    "typecheck": "npx tsc --noEmit",
+    "format": "prettier --write ."
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",
     "dotenv": "^16.6.1",
+    "framer-motion": "^11.3.24",
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.2.3",
     "next": "^16.1.0",
-    "framer-motion": "^11.3.24",
     "nodemailer": "^7.0.6",
+    "prettier": "^3.8.1",
     "react": "^19.2.4",
     "react-dom": "^19.1.0",
     "recharts": "^3.7.0",

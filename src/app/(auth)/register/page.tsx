@@ -19,7 +19,7 @@ export default function RegisterPage() {
       const res = await fetch("/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, email, password })
+        body: JSON.stringify({ username, email, password }),
       });
 
       const json = await res.json();
@@ -76,11 +76,13 @@ export default function RegisterPage() {
       </button>
       <p className="mt-2 text-center text-sm text-gray-600">
         Already have an account?{" "}
-        <Link href="/login" className="font-medium text-primary hover:underline">
+        <Link
+          href="/login"
+          className="font-medium text-primary hover:underline"
+        >
           Login
         </Link>
       </p>
     </form>
   );
 }
-

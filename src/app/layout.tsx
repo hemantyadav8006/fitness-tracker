@@ -5,8 +5,8 @@ export const metadata = {
   title: "Fitness Tracker",
   description: "Minimal fitness tracking dashboard",
   icons: {
-    icon: "/favicon.ico"
-  }
+    icon: "/favicon.ico",
+  },
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
@@ -18,4 +18,3 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     </html>
   );
 }
-

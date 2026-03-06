@@ -12,4 +12,3 @@ export async function POST(_req: NextRequest) {
     return apiError(message, { status: 500, code: "INTERNAL_ERROR" });
   }
 }
-

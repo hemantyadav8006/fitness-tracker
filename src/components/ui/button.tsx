@@ -23,7 +23,8 @@ function getButtonClasses(variant: ButtonVariant, size: ButtonSize): string {
       "bg-muted text-foreground border border-border hover:bg-muted/80",
     ghost:
       "bg-transparent text-foreground hover:bg-muted border border-transparent",
-    danger: "bg-red-500 text-white shadow-md hover:bg-red-500/90 hover:shadow-lg",
+    danger:
+      "bg-red-500 text-white shadow-md hover:bg-red-500/90 hover:shadow-lg",
   };
 
   const sizes: Record<ButtonSize, string> = {
@@ -65,4 +66,3 @@ export function Button({
     </button>
   );
 }
-
