@@ -1,4 +1,4 @@
-import { connectToDatabase } from "@/lib/db";
+import dbConnect from "@/lib/dbConnect";
 import { getUserFromRequest } from "@/lib/auth";
 import { ProgressEntry } from "@/models/Progress";
 import { ProgressForm } from "@/components/progress/ProgressForm";
@@ -12,7 +12,7 @@ export default async function ProgressPage() {
     return null;
   }
 
-  await connectToDatabase();
+  await dbConnect();
 
   const entries = await ProgressEntry.find({ userId: user.id }).sort({ date: -1 }).limit(60).lean();
 

@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { connectToDatabase } from "@/lib/db";
+import dbConnect from "@/lib/dbConnect";
 import { apiError, apiOk } from "@/lib/api-response";
 import { WorkoutLog } from "@/models/Workout";
 import { requireUser } from "@/lib/auth";
@@ -12,7 +12,7 @@ interface ChartPoint {
 export async function GET(req: NextRequest) {
   try {
     const user = await requireUser(req);
-    await connectToDatabase();
+    await dbConnect();
 
     const logs = await WorkoutLog.find({ userId: user.id }).sort({ date: 1 }).lean();
 

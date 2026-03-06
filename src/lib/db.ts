@@ -33,11 +33,20 @@ const globalCache = global._mongooseCache || {
 global._mongooseCache = globalCache;
 
 export async function connectToDatabase(): Promise<typeof mongoose> {
+  if (mongoose.connection.readyState === 1) {
+    console.log("🟢 MongoDB already connected");
+    // Ensure global cache is also hydrated for reuse
+    globalCache.conn = mongoose;
+    return mongoose;
+  }
+
   if (globalCache.conn) {
+    console.log("🟢 MongoDB already connected");
     return globalCache.conn;
   }
 
   if (!globalCache.promise) {
+    console.log("🟡 Creating new MongoDB connection...");
     mongoose.set("strictQuery", true);
     globalCache.promise = mongoose.connect(MONGODB_URI as string, {
       maxPoolSize: 10,
@@ -45,5 +54,6 @@ export async function connectToDatabase(): Promise<typeof mongoose> {
   }
 
   globalCache.conn = await globalCache.promise;
+  console.log("✅ MongoDB connection established");
   return globalCache.conn;
 }

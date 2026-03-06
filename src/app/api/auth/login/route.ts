@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { connectToDatabase } from "@/lib/db";
+import dbConnect from "@/lib/dbConnect";
 import { apiError, apiOk } from "@/lib/api-response";
 import { User } from "@/models/User";
 import { loginSchema } from "@/lib/validation";
@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
 
     const { username, password } = parsed.data;
 
-    await connectToDatabase();
+    await dbConnect();
 
     const user = await User.findOne({ username });
     if (!user) {

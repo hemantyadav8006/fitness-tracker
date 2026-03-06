@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { connectToDatabase } from "@/lib/db";
+import dbConnect from "@/lib/dbConnect";
 import { apiError, apiOk } from "@/lib/api-response";
 import { ProgressEntry } from "@/models/Progress";
 import { requireUser } from "@/lib/auth";
@@ -9,7 +9,7 @@ import type { ProgressEntryDTO } from "@/types/domain";
 export async function GET(req: NextRequest) {
   try {
     const user = await requireUser(req);
-    await connectToDatabase();
+    await dbConnect();
 
     const entries = await ProgressEntry.find({ userId: user.id }).sort({ date: -1 }).limit(60).lean();
 
@@ -42,7 +42,7 @@ export async function POST(req: NextRequest) {
       return apiError("Invalid payload", { status: 400, code: "INVALID_PAYLOAD" });
     }
 
-    await connectToDatabase();
+    await dbConnect();
 
     const created = await ProgressEntry.findOneAndUpdate(
       {

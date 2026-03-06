@@ -1,5 +1,5 @@
 import { getUserFromRequest } from "@/lib/auth";
-import { connectToDatabase } from "@/lib/db";
+import dbConnect from "@/lib/dbConnect";
 import { WorkoutLog } from "@/models/Workout";
 import { HabitEntry } from "@/models/Habit";
 import { ProgressEntry } from "@/models/Progress";
@@ -16,7 +16,7 @@ export default async function DashboardPage() {
     return null;
   }
 
-  await connectToDatabase();
+  await dbConnect();
 
   const [workoutCount, habitEntryCount, latestProgress] = await Promise.all([
     WorkoutLog.countDocuments({ userId: user.id }),

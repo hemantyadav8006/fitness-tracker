@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { connectToDatabase } from "@/lib/db";
+import dbConnect from "@/lib/dbConnect";
 import { apiError, apiOk } from "@/lib/api-response";
 import { ProgressEntry } from "@/models/Progress";
 import { requireUser } from "@/lib/auth";
@@ -7,7 +7,7 @@ import { requireUser } from "@/lib/auth";
 export async function DELETE(req: NextRequest, context: { params: Promise<{ id: string }> }) {
   try {
     const user = await requireUser(req);
-    await connectToDatabase();
+    await dbConnect();
 
     const { id } = await context.params;
     await ProgressEntry.deleteOne({ _id: id, userId: user.id });

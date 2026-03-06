@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { connectToDatabase } from "@/lib/db";
+import dbConnect from "@/lib/dbConnect";
 import { apiError, apiOk } from "@/lib/api-response";
 import { HabitEntry } from "@/models/Habit";
 import { requireUser } from "@/lib/auth";
@@ -9,7 +9,7 @@ import type { HabitEntryDTO } from "@/types/domain";
 export async function GET(req: NextRequest) {
   try {
     const user = await requireUser(req);
-    await connectToDatabase();
+    await dbConnect();
 
     const { searchParams } = new URL(req.url);
     const habitId = searchParams.get("habitId") ?? undefined;
@@ -50,7 +50,7 @@ export async function POST(req: NextRequest) {
       return apiError("Invalid payload", { status: 400, code: "INVALID_PAYLOAD" });
     }
 
-    await connectToDatabase();
+    await dbConnect();
 
     const created = await HabitEntry.findOneAndUpdate(
       {

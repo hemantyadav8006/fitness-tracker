@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { connectToDatabase } from "@/lib/db";
+import dbConnect from "@/lib/dbConnect";
 import { apiError, apiOk } from "@/lib/api-response";
 import { Habit, HabitEntry } from "@/models/Habit";
 import { requireUser } from "@/lib/auth";
@@ -12,7 +12,7 @@ interface ChartPoint {
 export async function GET(req: NextRequest) {
   try {
     const user = await requireUser(req);
-    await connectToDatabase();
+    await dbConnect();
 
     const [habits, entries] = await Promise.all([
       Habit.find({ userId: user.id }).lean(),

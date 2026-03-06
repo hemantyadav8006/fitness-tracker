@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { connectToDatabase } from "@/lib/db";
+import dbConnect from "@/lib/dbConnect";
 import { apiError, apiOk } from "@/lib/api-response";
 import { ProgressEntry } from "@/models/Progress";
 import { requireUser } from "@/lib/auth";
@@ -8,7 +8,7 @@ import type { ProgressEntryDTO } from "@/types/domain";
 export async function GET(req: NextRequest) {
   try {
     const user = await requireUser(req);
-    await connectToDatabase();
+    await dbConnect();
 
     const entries = await ProgressEntry.find({ userId: user.id, weight: { $ne: null } })
       .sort({ date: 1 })

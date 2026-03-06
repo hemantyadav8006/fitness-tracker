@@ -18,7 +18,7 @@ export default function LoginPage() {
       const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password })
+        body: JSON.stringify({ username, password }),
       });
 
       const json = await res.json();
@@ -61,13 +61,23 @@ export default function LoginPage() {
       <button type="submit" className="btn-primary w-full" disabled={loading}>
         {loading ? "Logging in..." : "Login"}
       </button>
-      <p className="mt-2 text-center text-sm text-gray-600">
-        Don&apos;t have an account?{" "}
-        <Link href="/register" className="font-medium text-primary hover:underline">
-          Register
+      <div className="flex items-center justify-between text-sm text-gray-600">
+        <Link
+          href={"/forgot-password" as any}
+          className="font-medium text-primary hover:underline"
+        >
+          Forgot password?
         </Link>
-      </p>
+        <span>
+          Don&apos;t have an account?{" "}
+          <Link
+            href="/register"
+            className="font-medium text-primary hover:underline"
+          >
+            Register
+          </Link>
+        </span>
+      </div>
     </form>
   );
 }
-

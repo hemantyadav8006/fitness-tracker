@@ -3,12 +3,38 @@ import type { HabitTargetType } from "@/types/domain";
 
 export const registerSchema = z.object({
   username: z.string().min(3).max(32),
-  password: z.string().min(6).max(128)
+  email: z.string().email().max(254),
+  password: z
+    .string()
+    .min(8)
+    .max(128)
+    .regex(/[A-Za-z]/, "Password must include a letter")
+    .regex(/[0-9]/, "Password must include a number")
 });
 
 export const loginSchema = z.object({
   username: z.string().min(3).max(32),
   password: z.string().min(6).max(128)
+});
+
+export const forgotPasswordSchema = z.object({
+  email: z.string().email().max(254),
+});
+
+export const verifyResetOtpSchema = z.object({
+  email: z.string().email().max(254),
+  otp: z.string().regex(/^\d{6}$/, "OTP must be 6 digits"),
+});
+
+export const resetPasswordSchema = z.object({
+  email: z.string().email().max(254),
+  otp: z.string().regex(/^\d{6}$/, "OTP must be 6 digits"),
+  newPassword: z
+    .string()
+    .min(8)
+    .max(128)
+    .regex(/[A-Za-z]/, "Password must include a letter")
+    .regex(/[0-9]/, "Password must include a number"),
 });
 
 export const workoutTemplateSchema = z.object({

@@ -1,4 +1,4 @@
-import { connectToDatabase } from "@/lib/db";
+import dbConnect from "@/lib/dbConnect";
 import { getUserFromRequest } from "@/lib/auth";
 import { Habit, HabitEntry } from "@/models/Habit";
 import { HabitForm } from "@/components/habits/HabitForm";
@@ -14,7 +14,7 @@ export default async function HabitsPage() {
     return null;
   }
 
-  await connectToDatabase();
+  await dbConnect();
 
   const [habits, entries] = await Promise.all([
     Habit.find({ userId: user.id }).sort({ name: 1 }).lean(),

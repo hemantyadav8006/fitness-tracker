@@ -2,7 +2,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
 import type { NextRequest } from "next/server";
-import { connectToDatabase } from "./db";
+import dbConnect from "./dbConnect";
 import { User } from "@/models/User";
 import type { UserSafe, UserRole } from "@/types/domain";
 
@@ -76,7 +76,7 @@ export async function getUserFromRequest(
   const decoded = verifyAuthToken(token);
   if (!decoded) return null;
 
-  await connectToDatabase();
+  await dbConnect();
 
   const user = await User.findById(decoded.sub).lean();
   if (!user) return null;

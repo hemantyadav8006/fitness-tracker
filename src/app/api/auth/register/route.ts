@@ -1,6 +1,5 @@
 import { NextRequest } from "next/server";
-import { z } from "zod";
-import { connectToDatabase } from "@/lib/db";
+import dbConnect from "@/lib/dbConnect";
 import { apiError, apiOk } from "@/lib/api-response";
 import { User } from "@/models/User";
 import { hashPassword, signAuthToken, setAuthCookie } from "@/lib/auth";
@@ -15,19 +14,27 @@ export async function POST(req: NextRequest) {
       return apiError("Invalid payload", { status: 400, code: "INVALID_PAYLOAD" });
     }
 
-    const { username, password } = parsed.data;
+    const { username, email, password } = parsed.data;
 
-    await connectToDatabase();
+    await dbConnect();
 
-    const existing = await User.findOne({ username }).lean();
-    if (existing) {
+    const [existingUsername, existingEmail] = await Promise.all([
+      User.findOne({ username }).lean(),
+      User.findOne({ email: email.toLowerCase() }).lean(),
+    ]);
+
+    if (existingUsername) {
       return apiError("Username already taken", { status: 409, code: "USERNAME_TAKEN" });
+    }
+    if (existingEmail) {
+      return apiError("Email already in use", { status: 409, code: "EMAIL_TAKEN" });
     }
 
     const passwordHash = await hashPassword(password);
 
     const user = await User.create({
       username,
+      email: email.toLowerCase(),
       passwordHash,
       role: "user"
     });

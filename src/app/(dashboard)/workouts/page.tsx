@@ -1,4 +1,4 @@
-import { connectToDatabase } from "@/lib/db";
+import dbConnect from "@/lib/dbConnect";
 import { getUserFromRequest } from "@/lib/auth";
 import { WorkoutLog, WorkoutTemplate } from "@/models/Workout";
 import { WorkoutTemplateForm } from "@/components/workouts/WorkoutTemplateForm";
@@ -12,7 +12,7 @@ export default async function WorkoutsPage() {
     return null;
   }
 
-  await connectToDatabase();
+  await dbConnect();
 
   const [templates, logs] = await Promise.all([
     WorkoutTemplate.find({ userId: user.id }).sort({ name: 1 }).lean(),

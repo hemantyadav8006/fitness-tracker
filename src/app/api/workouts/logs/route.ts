@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { connectToDatabase } from "@/lib/db";
+import dbConnect from "@/lib/dbConnect";
 import { apiError, apiOk } from "@/lib/api-response";
 import { WorkoutLog } from "@/models/Workout";
 import { requireUser } from "@/lib/auth";
@@ -9,7 +9,7 @@ import type { WorkoutLogDTO } from "@/types/domain";
 export async function GET(req: NextRequest) {
   try {
     const user = await requireUser(req);
-    await connectToDatabase();
+    await dbConnect();
 
     const logs = await WorkoutLog.find({ userId: user.id })
       .sort({ date: -1 })
@@ -51,7 +51,7 @@ export async function POST(req: NextRequest) {
       return apiError("Invalid payload", { status: 400, code: "INVALID_PAYLOAD" });
     }
 
-    await connectToDatabase();
+    await dbConnect();
 
     const created = await WorkoutLog.create({
       userId: user.id,
