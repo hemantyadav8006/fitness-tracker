@@ -9,11 +9,13 @@ export default function RegisterPage() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [message, setMessage] = useState<string | null>(null);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
     setError(null);
+    setMessage(null);
 
     try {
       const res = await fetch("/api/auth/register", {
@@ -28,7 +30,8 @@ export default function RegisterPage() {
         return;
       }
 
-      window.location.href = "/dashboard";
+      setMessage("Account created. Please check your email for the OTP.");
+      window.location.href = `/verify-otp?email=${encodeURIComponent(email)}`;
     } catch (err) {
       console.error(err);
       setError("Unexpected error");
@@ -71,6 +74,7 @@ export default function RegisterPage() {
         />
       </div>
       {error && <p className="text-sm text-red-600">{error}</p>}
+      {message && <p className="text-sm text-emerald-600">{message}</p>}
       <button type="submit" className="btn-primary w-full" disabled={loading}>
         {loading ? "Creating account..." : "Create account"}
       </button>

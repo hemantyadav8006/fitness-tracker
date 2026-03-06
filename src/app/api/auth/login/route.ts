@@ -17,11 +17,11 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    const { username, password } = parsed.data;
+    const { email, password } = parsed.data;
 
     await dbConnect();
 
-    const user = await User.findOne({ username });
+    const user = await User.findOne({ email: email.toLowerCase() });
     if (!user) {
       return apiError("Invalid credentials", {
         status: 401,
@@ -34,6 +34,13 @@ export async function POST(req: NextRequest) {
       return apiError("Invalid credentials", {
         status: 401,
         code: "INVALID_CREDENTIALS",
+      });
+    }
+
+    if (!user.isVerified) {
+      return apiError("Please verify your email before logging in.", {
+        status: 403,
+        code: "EMAIL_NOT_VERIFIED",
       });
     }
 

@@ -7,6 +7,9 @@ export interface UserDocument {
   email: string;
   passwordHash: string;
   role: UserRole;
+  otp?: string | null;
+  otpExpiry?: Date | null;
+  isVerified: boolean;
   resetPasswordOTP?: string | null;
   resetPasswordOTPExpire?: Date | null;
   createdAt: Date;
@@ -19,6 +22,9 @@ const UserSchema = new Schema<UserDocument>(
     email: { type: String, required: true, unique: true, index: true },
     passwordHash: { type: String, required: true },
     role: { type: String, enum: ["user", "admin"], default: "user" },
+    otp: { type: String, required: false },
+    otpExpiry: { type: Date, required: false },
+    isVerified: { type: Boolean, default: false },
     resetPasswordOTP: { type: String, required: false, index: true },
     resetPasswordOTPExpire: { type: Date, required: false },
   },

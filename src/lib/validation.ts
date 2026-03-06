@@ -4,16 +4,11 @@ import type { HabitTargetType } from "@/types/domain";
 export const registerSchema = z.object({
   username: z.string().min(3).max(32),
   email: z.string().email().max(254),
-  password: z
-    .string()
-    .min(8)
-    .max(128)
-    .regex(/[A-Za-z]/, "Password must include a letter")
-    .regex(/[0-9]/, "Password must include a number"),
+  password: z.string().min(6).max(128),
 });
 
 export const loginSchema = z.object({
-  username: z.string().min(3).max(32),
+  email: z.string().email().max(254),
   password: z.string().min(6).max(128),
 });
 

@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 
 export default function LoginPage() {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -18,7 +18,7 @@ export default function LoginPage() {
       const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({ email, password }),
       });
 
       const json = await res.json();
@@ -39,12 +39,12 @@ export default function LoginPage() {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label className="mb-1 block text-sm font-medium">Username</label>
+        <label className="mb-1 block text-sm font-medium">Email</label>
         <input
           className="input"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          autoComplete="username"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          autoComplete="email"
         />
       </div>
       <div>
@@ -58,6 +58,17 @@ export default function LoginPage() {
         />
       </div>
       {error && <p className="text-sm text-red-600">{error}</p>}
+      {error === "Please verify your email before logging in." && (
+        <button
+          type="button"
+          className="btn-primary w-full"
+          onClick={() => {
+            window.location.href = `/verify-otp?email=${encodeURIComponent(email)}&new=true`;
+          }}
+        >
+          Verify email
+        </button>
+      )}
       <button type="submit" className="btn-primary w-full" disabled={loading}>
         {loading ? "Logging in..." : "Login"}
       </button>
