@@ -4,6 +4,7 @@ import { apiError, apiOk } from "@/lib/api-response";
 import { User } from "@/models/User";
 import { verifyResetOtpSchema } from "@/lib/validation";
 import { verifyOtpHash } from "@/lib/otp";
+import { logError } from "@/lib/logger";
 
 export async function POST(req: NextRequest) {
   try {
@@ -47,7 +48,7 @@ export async function POST(req: NextRequest) {
 
     return apiOk({ message: "OTP verified" });
   } catch (err) {
-    console.error(err);
+    logError("api/auth/verify-reset-otp", err);
     const message = err instanceof Error ? err.message : "Internal error";
     return apiError(message, { status: 500, code: "INTERNAL_ERROR" });
   }

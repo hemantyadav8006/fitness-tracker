@@ -5,6 +5,7 @@ import { User } from "@/models/User";
 import { loginSchema } from "@/lib/validation";
 import { signAuthToken, setAuthCookie, verifyPassword } from "@/lib/auth";
 import type { UserSafe } from "@/types/domain";
+import { logError } from "@/lib/logger";
 
 export async function POST(req: NextRequest) {
   try {
@@ -60,7 +61,7 @@ export async function POST(req: NextRequest) {
 
     return apiOk(safeUser);
   } catch (err) {
-    console.error(err);
+    logError("api/auth/login", err);
     const message = err instanceof Error ? err.message : "Internal error";
     return apiError(message, { status: 500, code: "INTERNAL_ERROR" });
   }

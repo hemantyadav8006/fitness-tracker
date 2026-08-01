@@ -4,6 +4,7 @@ import { apiError, apiOk } from "@/lib/api-response";
 import { ProgressEntry } from "@/models/Progress";
 import { requireUser } from "@/lib/auth";
 import type { ProgressEntryDTO } from "@/types/domain";
+import { logError } from "@/lib/logger";
 
 export async function GET(req: NextRequest) {
   try {
@@ -31,7 +32,7 @@ export async function GET(req: NextRequest) {
     if (err instanceof Error && err.message === "UNAUTHORIZED") {
       return apiError("Unauthorized", { status: 401, code: "UNAUTHORIZED" });
     }
-    console.error(err);
+    logError("api/progress/waist", err);
     const message = err instanceof Error ? err.message : "Internal error";
     return apiError(message, { status: 500, code: "INTERNAL_ERROR" });
   }

@@ -5,6 +5,7 @@ import { User } from "@/models/User";
 import { hashPassword } from "@/lib/auth";
 import { resetPasswordSchema } from "@/lib/validation";
 import { verifyOtpHash } from "@/lib/otp";
+import { logError } from "@/lib/logger";
 
 export async function POST(req: NextRequest) {
   try {
@@ -54,7 +55,7 @@ export async function POST(req: NextRequest) {
 
     return apiOk({ message: "Password updated. You can now sign in." });
   } catch (err) {
-    console.error(err);
+    logError("api/auth/reset-password", err);
     const message = err instanceof Error ? err.message : "Internal error";
     return apiError(message, { status: 500, code: "INTERNAL_ERROR" });
   }

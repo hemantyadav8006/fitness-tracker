@@ -4,6 +4,7 @@ import { apiError, apiOk } from "@/lib/api-response";
 import { User } from "@/models/User";
 import { verifyOtpHash } from "@/lib/otp";
 import { z } from "zod";
+import { logError } from "@/lib/logger";
 
 const verifyOtpSchema = z.object({
   email: z.string().email().max(254),
@@ -51,7 +52,7 @@ export async function POST(req: NextRequest) {
 
     return apiOk({ message: "Email verified successfully." });
   } catch (err) {
-    console.error(err);
+    logError("api/auth/verify-otp", err);
     const message = err instanceof Error ? err.message : "Internal error";
     return apiError(message, { status: 500, code: "INTERNAL_ERROR" });
   }

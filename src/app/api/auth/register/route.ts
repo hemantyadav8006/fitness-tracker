@@ -6,6 +6,7 @@ import { hashPassword } from "@/lib/auth";
 import { registerSchema } from "@/lib/validation";
 import { generateOTP, hashOtp, otpExpiryFromNow } from "@/lib/otp";
 import { sendOtpEmail } from "@/lib/sendOtpEmail";
+import { logError } from "@/lib/logger";
 
 export async function POST(req: NextRequest) {
   try {
@@ -64,7 +65,7 @@ export async function POST(req: NextRequest) {
       { status: 201 },
     );
   } catch (err) {
-    console.error(err);
+    logError("api/auth/register", err);
     const message = err instanceof Error ? err.message : "Internal error";
     return apiError(message, { status: 500, code: "INTERNAL_ERROR" });
   }

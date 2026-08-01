@@ -5,6 +5,7 @@ import { User } from "@/models/User";
 import { forgotPasswordSchema } from "@/lib/validation";
 import { generateOTP, hashOtp, otpExpiryFromNow } from "@/lib/otp";
 import { sendPasswordResetOtpEmail } from "@/lib/sendOtpEmail";
+import { logError } from "@/lib/logger";
 
 export async function POST(req: NextRequest) {
   try {
@@ -41,7 +42,7 @@ export async function POST(req: NextRequest) {
       message: "If an account exists, an OTP has been sent.",
     });
   } catch (err) {
-    console.error(err);
+    logError("api/auth/forgot-password", err);
     const message = err instanceof Error ? err.message : "Internal error";
     return apiError(message, { status: 500, code: "INTERNAL_ERROR" });
   }

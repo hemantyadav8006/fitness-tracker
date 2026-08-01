@@ -5,6 +5,7 @@ import { WorkoutTemplate } from "@/models/Workout";
 import { requireUser } from "@/lib/auth";
 import { workoutTemplateSchema } from "@/lib/validation";
 import type { WorkoutTemplateDTO } from "@/types/domain";
+import { logError } from "@/lib/logger";
 
 export async function GET(req: NextRequest) {
   try {
@@ -29,7 +30,7 @@ export async function GET(req: NextRequest) {
     if (err instanceof Error && err.message === "UNAUTHORIZED") {
       return apiError("Unauthorized", { status: 401, code: "UNAUTHORIZED" });
     }
-    console.error(err);
+    logError("api/workouts/templates", err);
     const message = err instanceof Error ? err.message : "Internal error";
     return apiError(message, { status: 500, code: "INTERNAL_ERROR" });
   }
@@ -69,7 +70,7 @@ export async function POST(req: NextRequest) {
     if (err instanceof Error && err.message === "UNAUTHORIZED") {
       return apiError("Unauthorized", { status: 401, code: "UNAUTHORIZED" });
     }
-    console.error(err);
+    logError("api/workouts/templates", err);
     const message = err instanceof Error ? err.message : "Internal error";
     return apiError(message, { status: 500, code: "INTERNAL_ERROR" });
   }

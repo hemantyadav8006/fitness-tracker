@@ -3,6 +3,7 @@ import { getUserFromRequest } from "@/lib/auth";
 import { Habit, HabitEntry } from "@/models/Habit";
 import { HabitForm } from "@/components/habits/HabitForm";
 import { HabitTodayForm } from "@/components/habits/HabitTodayForm";
+import { NlQuickLog } from "@/components/ai/NlQuickLog";
 import type { HabitDTO } from "@/types/domain";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -46,6 +47,14 @@ export default async function HabitsPage() {
         </p>
       </div>
 
+      <Card className="space-y-4 p-4 sm:p-5">
+        <div className="flex items-center justify-between gap-2">
+          <h2 className="text-sm font-semibold">Natural-language check-in</h2>
+          <Badge variant="outline">AI draft → confirm</Badge>
+        </div>
+        <NlQuickLog context="habits" habits={habitDtos} />
+      </Card>
+
       <div className="grid gap-4 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)]">
         <Card className="space-y-4 p-4 sm:p-5">
           <div className="flex items-center justify-between gap-2">
@@ -57,7 +66,7 @@ export default async function HabitsPage() {
 
         <Card className="space-y-4 p-4 sm:p-5">
           <div className="flex items-center justify-between gap-2">
-            <h2 className="text-sm font-semibold">Today&apos;s completion</h2>
+            <h2 className="text-sm font-semibold">Manual today&apos;s completion</h2>
             <Badge variant="outline">Daily check-in</Badge>
           </div>
           <HabitTodayForm habits={habitDtos} />

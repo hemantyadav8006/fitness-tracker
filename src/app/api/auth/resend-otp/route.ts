@@ -5,6 +5,7 @@ import { User } from "@/models/User";
 import { generateOTP, hashOtp, otpExpiryFromNow } from "@/lib/otp";
 import { sendOtpEmail } from "@/lib/sendOtpEmail";
 import { z } from "zod";
+import { logError } from "@/lib/logger";
 
 const resendOtpSchema = z.object({
   email: z.string().email().max(254),
@@ -40,7 +41,7 @@ export async function POST(req: NextRequest) {
 
     return apiOk({ message: "OTP resent if account exists." });
   } catch (err) {
-    console.error(err);
+    logError("api/auth/resend-otp", err);
     const message = err instanceof Error ? err.message : "Internal error";
     return apiError(message, { status: 500, code: "INTERNAL_ERROR" });
   }

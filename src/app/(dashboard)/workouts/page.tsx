@@ -3,8 +3,11 @@ import { getUserFromRequest } from "@/lib/auth";
 import { WorkoutLog, WorkoutTemplate } from "@/models/Workout";
 import { WorkoutTemplateForm } from "@/components/workouts/WorkoutTemplateForm";
 import { WorkoutQuickLogForm } from "@/components/workouts/WorkoutQuickLogForm";
+import { NlQuickLog } from "@/components/ai/NlQuickLog";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Habit } from "@/models/Habit";
+import type { HabitDTO } from "@/types/domain";
 
 export default async function WorkoutsPage() {
   const user = await getUserFromRequest();
@@ -14,10 +17,19 @@ export default async function WorkoutsPage() {
 
   await dbConnect();
 
-  const [templates, logs] = await Promise.all([
+  const [templates, logs, habits] = await Promise.all([
     WorkoutTemplate.find({ userId: user.id }).sort({ name: 1 }).lean(),
     WorkoutLog.find({ userId: user.id }).sort({ date: -1 }).limit(20).lean(),
+    Habit.find({ userId: user.id }).select("name targetType targetValue").lean(),
   ]);
+
+  const habitDtos: HabitDTO[] = habits.map((h) => ({
+    _id: String(h._id),
+    userId: user.id,
+    name: h.name,
+    targetType: h.targetType,
+    targetValue: h.targetValue ?? null,
+  }));
 
   return (
     <div className="space-y-6">
@@ -27,6 +39,14 @@ export default async function WorkoutsPage() {
           Build templates and log sessions with a few taps.
         </p>
       </div>
+
+      <Card className="space-y-4 p-4 sm:p-5">
+        <div className="flex items-center justify-between gap-2">
+          <h2 className="text-sm font-semibold">Natural-language log</h2>
+          <Badge variant="outline">AI draft → confirm</Badge>
+        </div>
+        <NlQuickLog context="workouts" habits={habitDtos} />
+      </Card>
 
       <div className="grid gap-4 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)]">
         <Card className="space-y-4 p-4 sm:p-5">
@@ -39,7 +59,7 @@ export default async function WorkoutsPage() {
 
         <Card className="space-y-4 p-4 sm:p-5">
           <div className="flex items-center justify-between gap-2">
-            <h2 className="text-sm font-semibold">Quick log</h2>
+            <h2 className="text-sm font-semibold">Manual quick log</h2>
             <Badge variant="outline">Under a minute</Badge>
           </div>
           <WorkoutQuickLogForm />

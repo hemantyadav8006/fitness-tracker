@@ -3,6 +3,7 @@ import dbConnect from "@/lib/dbConnect";
 import { apiError, apiOk } from "@/lib/api-response";
 import { WorkoutLog } from "@/models/Workout";
 import { requireUser } from "@/lib/auth";
+import { logError } from "@/lib/logger";
 
 export async function DELETE(
   req: NextRequest,
@@ -20,7 +21,7 @@ export async function DELETE(
     if (err instanceof Error && err.message === "UNAUTHORIZED") {
       return apiError("Unauthorized", { status: 401, code: "UNAUTHORIZED" });
     }
-    console.error(err);
+    logError("api/workouts/logs/[id]", err);
     const message = err instanceof Error ? err.message : "Internal error";
     return apiError(message, { status: 500, code: "INTERNAL_ERROR" });
   }

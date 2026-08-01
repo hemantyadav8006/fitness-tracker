@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { logError } from "@/lib/logger";
 
 const MONGODB_URI = process.env.MONGODB_URI!;
 
@@ -20,25 +21,31 @@ if (!cached) {
   cached = global.mongoose = { conn: null, promise: null };
 }
 
+function debugLog(message: string): void {
+  if (process.env.NODE_ENV !== "production") {
+    console.log(message);
+  }
+}
+
 export default async function dbConnect() {
   if (cached.conn) {
-    console.log("🟢 MongoDB already connected");
+    debugLog("🟢 MongoDB already connected");
     return cached.conn;
   }
 
   if (!cached.promise) {
-    console.log("🟡 Creating new MongoDB connection...");
+    debugLog("🟡 Creating new MongoDB connection...");
 
     cached.promise = mongoose
       .connect(MONGODB_URI, {
         bufferCommands: false,
       })
       .then((mongooseInstance) => {
-        console.log("✅ MongoDB connection established");
+        debugLog("✅ MongoDB connection established");
         return mongooseInstance;
       })
       .catch((error) => {
-        console.error("❌ MongoDB connection error:", error);
+        logError("dbConnect", error, { phase: "mongoose.connect" });
         throw error;
       });
   }
