@@ -254,7 +254,7 @@ EMAIL_FROM=you@example.com
 
 ```text
 fitness-tracker/
-├── Public/                 # Static assets (favicon)
+├── public/                 # Static assets (favicon, logo, manifest)
 ├── src/
 │   ├── app/
 │   │   ├── layout.tsx      # Root layout: fonts, theme, 3D background
