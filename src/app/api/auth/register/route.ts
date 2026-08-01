@@ -4,14 +4,13 @@ import { apiError, apiOk } from "@/lib/api-response";
 import { User } from "@/models/User";
 import { hashPassword } from "@/lib/auth";
 import { registerSchema } from "@/lib/validation";
-import { generateOTP } from "@/lib/generateOtp";
+import { generateOTP, hashOtp, otpExpiryFromNow } from "@/lib/otp";
 import { sendOtpEmail } from "@/lib/sendOtpEmail";
 
 export async function POST(req: NextRequest) {
   try {
     const json = await req.json();
     const parsed = registerSchema.safeParse(json);
-    console.log("v: ", parsed);
     if (!parsed.success) {
       return apiError("Invalid payload", {
         status: 400,
@@ -51,8 +50,8 @@ export async function POST(req: NextRequest) {
     });
 
     const otp = generateOTP();
-    user.otp = otp;
-    user.otpExpiry = new Date(Date.now() + 10 * 60 * 1000);
+    user.otp = hashOtp(otp);
+    user.otpExpiry = otpExpiryFromNow();
     await user.save();
 
     await sendOtpEmail(user.email, otp);

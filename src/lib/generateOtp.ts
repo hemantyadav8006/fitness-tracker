@@ -1,3 +1,2 @@
-export function generateOTP(): string {
-  return Math.floor(100000 + Math.random() * 900000).toString();
-}
+/** @deprecated Import from `@/lib/otp` instead. */
+export { generateOTP, hashOtp, verifyOtpHash, OTP_TTL_MS } from "@/lib/otp";

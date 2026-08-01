@@ -1,14 +1,23 @@
 import { z } from "zod";
 import type { HabitTargetType } from "@/types/domain";
 
+/** Shared policy for register + password reset (not login — legacy hashes may be shorter). */
+export const passwordSchema = z
+  .string()
+  .min(8, "Password must be at least 8 characters")
+  .max(128)
+  .regex(/[A-Za-z]/, "Password must include a letter")
+  .regex(/[0-9]/, "Password must include a number");
+
 export const registerSchema = z.object({
   username: z.string().min(3).max(32),
   email: z.string().email().max(254),
-  password: z.string().min(6).max(128),
+  password: passwordSchema,
 });
 
 export const loginSchema = z.object({
   email: z.string().email().max(254),
+  // Keep permissive so existing accounts with older policy can still sign in.
   password: z.string().min(6).max(128),
 });
 
@@ -24,12 +33,7 @@ export const verifyResetOtpSchema = z.object({
 export const resetPasswordSchema = z.object({
   email: z.string().email().max(254),
   otp: z.string().regex(/^\d{6}$/, "OTP must be 6 digits"),
-  newPassword: z
-    .string()
-    .min(8)
-    .max(128)
-    .regex(/[A-Za-z]/, "Password must include a letter")
-    .regex(/[0-9]/, "Password must include a number"),
+  newPassword: passwordSchema,
 });
 
 export const workoutTemplateSchema = z.object({

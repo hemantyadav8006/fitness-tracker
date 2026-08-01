@@ -1,13 +1,9 @@
 import { NextRequest } from "next/server";
-import crypto from "crypto";
 import dbConnect from "@/lib/dbConnect";
 import { apiError, apiOk } from "@/lib/api-response";
 import { User } from "@/models/User";
 import { verifyResetOtpSchema } from "@/lib/validation";
-
-function hashOtp(otp: string): string {
-  return crypto.createHash("sha256").update(otp).digest("hex");
-}
+import { verifyOtpHash } from "@/lib/otp";
 
 export async function POST(req: NextRequest) {
   try {
@@ -21,7 +17,7 @@ export async function POST(req: NextRequest) {
     }
 
     const email = parsed.data.email.toLowerCase();
-    const hashed = hashOtp(parsed.data.otp);
+    const otp = parsed.data.otp;
 
     await dbConnect();
 
@@ -37,19 +33,12 @@ export async function POST(req: NextRequest) {
       ? new Date(user.resetPasswordOTPExpire)
       : null;
 
-    if (!user.resetPasswordOTP || !expires || expires.getTime() <= Date.now()) {
-      return apiError("Invalid or expired OTP.", {
-        status: 400,
-        code: "INVALID_OTP",
-      });
-    }
-
-    const match = crypto.timingSafeEqual(
-      Buffer.from(user.resetPasswordOTP),
-      Buffer.from(hashed),
-    );
-
-    if (!match) {
+    if (
+      !user.resetPasswordOTP ||
+      !expires ||
+      expires.getTime() <= Date.now() ||
+      !verifyOtpHash(otp, user.resetPasswordOTP)
+    ) {
       return apiError("Invalid or expired OTP.", {
         status: 400,
         code: "INVALID_OTP",

@@ -31,7 +31,7 @@ export default function ForgotPasswordPage() {
         return;
       }
 
-      setMessage("OTP sent to email. Redirecting...");
+      setMessage("If an account exists, an OTP has been sent. Redirecting...");
       setTimeout(() => {
         router.push(
           `/reset-password?email=${encodeURIComponent(email)}` as any,

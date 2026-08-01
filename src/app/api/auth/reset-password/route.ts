@@ -4,11 +4,7 @@ import { apiError, apiOk } from "@/lib/api-response";
 import { User } from "@/models/User";
 import { hashPassword } from "@/lib/auth";
 import { resetPasswordSchema } from "@/lib/validation";
-import crypto from "crypto";
-
-function hashOtp(otp: string): string {
-  return crypto.createHash("sha256").update(otp).digest("hex");
-}
+import { verifyOtpHash } from "@/lib/otp";
 
 export async function POST(req: NextRequest) {
   try {
@@ -22,15 +18,13 @@ export async function POST(req: NextRequest) {
     }
 
     const email = parsed.data.email.toLowerCase();
-    const otpHash = hashOtp(parsed.data.otp);
-    const newPassword = parsed.data.newPassword;
+    const { otp, newPassword } = parsed.data;
 
     await dbConnect();
 
     const user = await User.findOne({ email });
 
     if (!user) {
-      // Don't leak whether the email exists.
       return apiError("Invalid or expired OTP.", {
         status: 400,
         code: "INVALID_OTP",
@@ -41,19 +35,12 @@ export async function POST(req: NextRequest) {
       ? new Date(user.resetPasswordOTPExpire)
       : null;
 
-    if (!user.resetPasswordOTP || !expires || expires.getTime() <= Date.now()) {
-      return apiError("Invalid or expired OTP.", {
-        status: 400,
-        code: "INVALID_OTP",
-      });
-    }
-
-    const match = crypto.timingSafeEqual(
-      Buffer.from(user.resetPasswordOTP),
-      Buffer.from(otpHash),
-    );
-
-    if (!match) {
+    if (
+      !user.resetPasswordOTP ||
+      !expires ||
+      expires.getTime() <= Date.now() ||
+      !verifyOtpHash(otp, user.resetPasswordOTP)
+    ) {
       return apiError("Invalid or expired OTP.", {
         status: 400,
         code: "INVALID_OTP",

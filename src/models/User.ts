@@ -22,9 +22,11 @@ const UserSchema = new Schema<UserDocument>(
     email: { type: String, required: true, unique: true, index: true },
     passwordHash: { type: String, required: true },
     role: { type: String, enum: ["user", "admin"], default: "user" },
+    /** SHA-256 hex of email-verification OTP (never store plaintext). */
     otp: { type: String, required: false },
     otpExpiry: { type: Date, required: false },
     isVerified: { type: Boolean, default: false },
+    /** SHA-256 hex of password-reset OTP (never store plaintext). */
     resetPasswordOTP: { type: String, required: false, index: true },
     resetPasswordOTPExpire: { type: Date, required: false },
   },

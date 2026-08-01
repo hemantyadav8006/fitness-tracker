@@ -1,19 +1,10 @@
 import { NextRequest } from "next/server";
-import crypto from "crypto";
 import dbConnect from "@/lib/dbConnect";
 import { apiError, apiOk } from "@/lib/api-response";
 import { User } from "@/models/User";
 import { forgotPasswordSchema } from "@/lib/validation";
+import { generateOTP, hashOtp, otpExpiryFromNow } from "@/lib/otp";
 import { sendPasswordResetOtpEmail } from "@/lib/sendOtpEmail";
-
-function generateOtp(): string {
-  const otp = crypto.randomInt(0, 1000000);
-  return String(otp).padStart(6, "0");
-}
-
-function hashOtp(otp: string): string {
-  return crypto.createHash("sha256").update(otp).digest("hex");
-}
 
 export async function POST(req: NextRequest) {
   try {
@@ -33,23 +24,22 @@ export async function POST(req: NextRequest) {
     const user = await User.findOne({ email });
 
     if (!user) {
-      return apiError("User not found", {
-        status: 404,
-        code: "USER_NOT_FOUND",
+      // Same response shape whether or not the account exists (avoid enumeration).
+      return apiOk({
+        message: "If an account exists, an OTP has been sent.",
       });
     }
 
-    const otp = generateOtp();
-    const hashed = hashOtp(otp);
-    const expire = new Date(Date.now() + 1000 * 60 * 10); // 10 minutes
-
-    user.resetPasswordOTP = hashed;
-    user.resetPasswordOTPExpire = expire;
+    const otp = generateOTP();
+    user.resetPasswordOTP = hashOtp(otp);
+    user.resetPasswordOTPExpire = otpExpiryFromNow();
     await user.save();
 
     await sendPasswordResetOtpEmail(email, otp);
 
-    return apiOk({ message: "OTP sent to email" });
+    return apiOk({
+      message: "If an account exists, an OTP has been sent.",
+    });
   } catch (err) {
     console.error(err);
     const message = err instanceof Error ? err.message : "Internal error";

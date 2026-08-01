@@ -2,6 +2,7 @@ import { NextRequest } from "next/server";
 import dbConnect from "@/lib/dbConnect";
 import { apiError, apiOk } from "@/lib/api-response";
 import { User } from "@/models/User";
+import { verifyOtpHash } from "@/lib/otp";
 import { z } from "zod";
 
 const verifyOtpSchema = z.object({
@@ -33,7 +34,10 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    if (user.otp !== otp || user.otpExpiry.getTime() <= Date.now()) {
+    if (
+      user.otpExpiry.getTime() <= Date.now() ||
+      !verifyOtpHash(otp, user.otp)
+    ) {
       return apiError("Invalid or expired OTP.", {
         status: 400,
         code: "INVALID_OTP",

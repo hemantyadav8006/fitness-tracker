@@ -2,7 +2,7 @@ import { NextRequest } from "next/server";
 import dbConnect from "@/lib/dbConnect";
 import { apiError, apiOk } from "@/lib/api-response";
 import { User } from "@/models/User";
-import { generateOTP } from "@/lib/generateOtp";
+import { generateOTP, hashOtp, otpExpiryFromNow } from "@/lib/otp";
 import { sendOtpEmail } from "@/lib/sendOtpEmail";
 import { z } from "zod";
 
@@ -32,8 +32,8 @@ export async function POST(req: NextRequest) {
     }
 
     const otp = generateOTP();
-    user.otp = otp;
-    user.otpExpiry = new Date(Date.now() + 10 * 60 * 1000);
+    user.otp = hashOtp(otp);
+    user.otpExpiry = otpExpiryFromNow();
     await user.save();
 
     await sendOtpEmail(email, otp);

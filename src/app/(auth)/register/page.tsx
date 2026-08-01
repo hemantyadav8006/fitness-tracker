@@ -17,6 +17,18 @@ export default function RegisterPage() {
     setError(null);
     setMessage(null);
 
+    if (
+      password.length < 8 ||
+      !/[A-Za-z]/.test(password) ||
+      !/[0-9]/.test(password)
+    ) {
+      setError(
+        "Password must be at least 8 characters and include a letter and a number.",
+      );
+      setLoading(false);
+      return;
+    }
+
     try {
       const res = await fetch("/api/auth/register", {
         method: "POST",
@@ -71,7 +83,12 @@ export default function RegisterPage() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           autoComplete="new-password"
+          minLength={8}
+          required
         />
+        <p className="mt-1 text-xs text-muted-foreground">
+          At least 8 characters, including a letter and a number.
+        </p>
       </div>
       {error && <p className="text-sm text-red-600">{error}</p>}
       {message && <p className="text-sm text-emerald-600">{message}</p>}
