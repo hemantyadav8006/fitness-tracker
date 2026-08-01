@@ -1,3 +1,5 @@
+"use client";
+
 import type { HTMLAttributes, ReactNode } from "react";
 import { cn } from "@/lib/cn";
 import { Card } from "./card";
@@ -19,11 +21,7 @@ export function StatCard({
 }: StatCardProps) {
   return (
     <Card
-      className={cn(
-        "flex flex-col gap-2 p-4 sm:p-5",
-        "transition-transform duration-200 hover:-translate-y-0.5",
-        className,
-      )}
+      className={cn("flex flex-col gap-2 p-4 sm:p-5", className)}
       {...props}
     >
       <div className="flex items-center justify-between gap-3">
@@ -36,7 +34,7 @@ export function StatCard({
           </div>
         ) : null}
       </div>
-      <div className="text-2xl font-semibold">{value}</div>
+      <div className="font-display text-stat text-foreground">{value}</div>
       {description ? (
         <div className="text-xs text-muted-foreground">{description}</div>
       ) : null}

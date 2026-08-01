@@ -44,7 +44,7 @@ export function HabitCompletionChart() {
           tick={{ fontSize: 10 }}
         />
         <Tooltip
-          formatter={(v?: number) => `${((v ?? 0) as number).toFixed(0)}%`}
+          formatter={(v) => `${Number(v ?? 0).toFixed(0)}%`}
         />
         <Bar dataKey="completion" fill="#22c55e" />
       </BarChart>

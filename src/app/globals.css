@@ -2,18 +2,191 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  @apply bg-background text-foreground;
+/*
+  Design tokens — lime accent + charcoal neutrals.
+  Dark values are the dashboard-first baseline; light is marketing-first.
+*/
+:root {
+  /* Neutrals — warm charcoal family, not flat gray */
+  --background: 40 20% 98%;
+  --foreground: 220 18% 10%;
+  --card: 0 0% 100%;
+  --card-foreground: 220 18% 10%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 220 18% 10%;
+  --muted: 40 14% 94%;
+  --muted-foreground: 220 10% 40%;
+  --border: 220 12% 88%;
+  --input: 220 12% 88%;
+  --ring: 84 78% 42%;
+
+  /* Accent — vivid lime */
+  --primary: 84 78% 42%;
+  --primary-foreground: 220 20% 8%;
+  --secondary: 220 14% 92%;
+  --secondary-foreground: 220 18% 14%;
+  --accent: 84 55% 92%;
+  --accent-foreground: 84 60% 22%;
+
+  /* Semantic — success shares green family, stays distinct from primary */
+  --success: 152 62% 36%;
+  --success-foreground: 0 0% 100%;
+  --warning: 38 92% 48%;
+  --warning-foreground: 220 20% 8%;
+  --destructive: 0 72% 51%;
+  --destructive-foreground: 0 0% 100%;
+
+  /* Chart series (HSL components for Recharts via hsl(var(--chart-N))) */
+  --chart-1: 84 78% 42%;
+  --chart-2: 152 62% 40%;
+  --chart-3: 199 78% 45%;
+  --chart-4: 38 92% 50%;
+  --chart-5: 280 45% 52%;
+
+  /* Radii */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.625rem;
+  --radius-lg: 0.875rem;
+  --radius-xl: 1.125rem;
+  --radius-2xl: 1.5rem;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px hsl(220 18% 10% / 0.05);
+  --shadow-md: 0 4px 12px hsl(220 18% 10% / 0.08);
+  --shadow-lg: 0 12px 28px hsl(220 18% 10% / 0.12);
+
+  /* Fonts set by next/font on body */
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-sora), var(--font-inter), ui-sans-serif, sans-serif;
 }
 
+.dark {
+  --background: 220 18% 7%;
+  --foreground: 40 20% 96%;
+  --card: 220 16% 10%;
+  --card-foreground: 40 20% 96%;
+  --popover: 220 16% 10%;
+  --popover-foreground: 40 20% 96%;
+  --muted: 220 14% 14%;
+  --muted-foreground: 220 10% 62%;
+  --border: 220 12% 18%;
+  --input: 220 12% 18%;
+  --ring: 84 85% 52%;
+
+  --primary: 84 85% 52%;
+  --primary-foreground: 220 20% 6%;
+  --secondary: 220 14% 16%;
+  --secondary-foreground: 40 20% 94%;
+  --accent: 84 40% 16%;
+  --accent-foreground: 84 80% 72%;
+
+  --success: 152 58% 48%;
+  --success-foreground: 220 20% 6%;
+  --warning: 38 92% 55%;
+  --warning-foreground: 220 20% 6%;
+  --destructive: 0 70% 55%;
+  --destructive-foreground: 0 0% 100%;
+
+  --chart-1: 84 85% 52%;
+  --chart-2: 152 58% 48%;
+  --chart-3: 199 80% 55%;
+  --chart-4: 38 92% 55%;
+  --chart-5: 280 50% 62%;
+
+  --shadow-sm: 0 1px 2px hsl(0 0% 0% / 0.35);
+  --shadow-md: 0 4px 14px hsl(0 0% 0% / 0.4);
+  --shadow-lg: 0 16px 36px hsl(0 0% 0% / 0.5);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    @apply scroll-smooth;
+  }
+
+  body {
+    @apply bg-background font-sans text-foreground antialiased;
+    font-feature-settings: "ss01" on, "cv11" on;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3,
+  .font-display {
+    font-family: var(--font-display);
+    letter-spacing: -0.025em;
+  }
+
+  :focus-visible {
+    @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
+  }
+
+  /* Prefer light chrome on marketing; dark when .dark is on <html> */
+  ::selection {
+    background: hsl(var(--primary) / 0.28);
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+/* Scrollbars */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: hsl(var(--muted-foreground) / 0.35) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted-foreground) / 0.3);
+  border-radius: 999px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground) / 0.5);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/*
+  Legacy helpers — kept temporarily for forms not yet migrated.
+  Prefer Button / Input / Card components.
+*/
 .card {
-  @apply rounded-lg border border-border bg-white shadow-sm dark:bg-neutral-900;
+  @apply rounded-xl border border-border bg-card shadow-sm;
 }
 
 .btn-primary {
-  @apply inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow-sm transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60;
+  @apply inline-flex items-center justify-center rounded-xl bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow-sm transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60;
 }
 
 .input {
-  @apply w-full rounded-md border border-border bg-white px-3 py-2 text-sm shadow-sm outline-none ring-0 focus:border-primary dark:bg-neutral-900;
+  @apply w-full rounded-xl border border-input bg-background px-3 py-2 text-sm shadow-sm outline-none focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-ring/30;
 }

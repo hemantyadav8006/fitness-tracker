@@ -1,8 +1,9 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { cn } from "@/lib/cn";
+import { motionTransition, pickTransition } from "@/lib/motion";
 
 interface ModalProps {
   open: boolean;
@@ -12,6 +13,8 @@ interface ModalProps {
 }
 
 export function Modal({ open, onClose, title, children }: ModalProps) {
+  const reduced = useReducedMotion();
+
   return (
     <AnimatePresence>
       {open ? (
@@ -22,24 +25,26 @@ export function Modal({ open, onClose, title, children }: ModalProps) {
           className="fixed inset-0 z-50 flex items-center justify-center px-4"
         >
           <motion.div
-            className="absolute inset-0 bg-black/40 backdrop-blur-md"
+            className="absolute inset-0 bg-black/45 backdrop-blur-md"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            transition={pickTransition(reduced, motionTransition.fast)}
             onClick={onClose}
           />
           <motion.div
             className={cn(
-              "relative z-10 w-full max-w-md rounded-2xl border border-border/70 bg-background/95 p-5 shadow-xl",
-              "dark:bg-neutral-950/95",
+              "relative z-10 w-full max-w-md rounded-2xl border border-border/70 bg-card/95 p-5 shadow-lg backdrop-blur-xl",
             )}
-            initial={{ opacity: 0, y: 16, scale: 0.98 }}
+            initial={reduced ? false : { opacity: 0, y: 12, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 8, scale: 0.98 }}
-            transition={{ type: "spring", stiffness: 260, damping: 22 }}
+            exit={reduced ? undefined : { opacity: 0, y: 8, scale: 0.98 }}
+            transition={pickTransition(reduced, motionTransition.base)}
           >
             {title ? (
-              <div className="mb-3 text-sm font-semibold">{title}</div>
+              <div className="mb-3 font-display text-sm font-semibold">
+                {title}
+              </div>
             ) : null}
             {children}
           </motion.div>

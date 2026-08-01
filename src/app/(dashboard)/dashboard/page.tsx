@@ -7,12 +7,12 @@ import { StatCard } from "@/components/ui/stat-card";
 import { WeightChart, WaistChart } from "@/components/charts/weight-chart";
 import { WorkoutFrequencyChart } from "@/components/charts/workout-chart";
 import { HabitCompletionChartModern } from "@/components/charts/habit-chart";
+import { DashboardMotion } from "@/components/dashboard-motion";
 
 export default async function DashboardPage() {
   const user = await getUserFromRequest();
 
   if (!user) {
-    // Should be handled by layout redirect, but keep a safeguard.
     return null;
   }
 
@@ -25,26 +25,32 @@ export default async function DashboardPage() {
   ]);
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-semibold tracking-tight">Dashboard</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          High-level overview of your training, habits, and progress.
-        </p>
-      </div>
-
-      <div className="grid gap-4 md:grid-cols-3">
+    <DashboardMotion
+      header={
+        <div>
+          <h1 className="font-display text-3xl font-semibold tracking-tight">
+            Dashboard
+          </h1>
+          <p className="mt-1 text-sm text-muted-foreground">
+            High-level overview of your training, habits, and progress.
+          </p>
+        </div>
+      }
+      stats={[
         <StatCard
+          key="workouts"
           label="Workouts logged"
           value={workoutCount}
           description="Total sessions recorded"
-        />
+        />,
         <StatCard
+          key="habits"
           label="Habit entries"
           value={habitEntryCount}
           description="Check-ins across all habits"
-        />
+        />,
         <StatCard
+          key="metrics"
           label="Latest metrics"
           value={
             latestProgress ? (
@@ -62,15 +68,14 @@ export default async function DashboardPage() {
               ? "Most recent weight & waist"
               : "Add your first measurement"
           }
-        />
-      </div>
-
-      <div className="grid gap-4 md:grid-cols-2">
-        <WeightChart />
-        <WaistChart />
-        <WorkoutFrequencyChart />
-        <HabitCompletionChartModern />
-      </div>
-    </div>
+        />,
+      ]}
+      charts={[
+        <WeightChart key="weight" />,
+        <WaistChart key="waist" />,
+        <WorkoutFrequencyChart key="freq" />,
+        <HabitCompletionChartModern key="habits-chart" />,
+      ]}
+    />
   );
 }

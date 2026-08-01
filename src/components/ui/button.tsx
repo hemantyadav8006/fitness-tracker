@@ -1,5 +1,9 @@
+"use client";
+
 import type { ButtonHTMLAttributes, ReactNode } from "react";
+import { motion, useReducedMotion } from "framer-motion";
 import { cn } from "@/lib/cn";
+import { motionTransition, pickTransition } from "@/lib/motion";
 
 type ButtonVariant = "primary" | "secondary" | "ghost" | "danger";
 type ButtonSize = "sm" | "md" | "lg" | "icon";
@@ -14,17 +18,16 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 function getButtonClasses(variant: ButtonVariant, size: ButtonSize): string {
   const base =
-    "inline-flex items-center justify-center rounded-full text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 gap-2";
+    "inline-flex items-center justify-center rounded-xl text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-60 gap-2";
 
   const variants: Record<ButtonVariant, string> = {
     primary:
-      "bg-primary text-primary-foreground shadow-md hover:shadow-lg hover:bg-primary/90",
+      "bg-primary text-primary-foreground shadow-md hover:bg-primary/90",
     secondary:
-      "bg-muted text-foreground border border-border hover:bg-muted/80",
-    ghost:
-      "bg-transparent text-foreground hover:bg-muted border border-transparent",
+      "bg-secondary text-secondary-foreground border border-border hover:bg-secondary/80",
+    ghost: "bg-transparent text-foreground hover:bg-muted border border-transparent",
     danger:
-      "bg-red-500 text-white shadow-md hover:bg-red-500/90 hover:shadow-lg",
+      "bg-destructive text-destructive-foreground shadow-md hover:bg-destructive/90",
   };
 
   const sizes: Record<ButtonSize, string> = {
@@ -46,23 +49,38 @@ export function Button({
   isLoading,
   children,
   disabled,
+  type = "button",
   ...props
 }: ButtonProps) {
+  const reduced = useReducedMotion();
+  const {
+    onDrag,
+    onDragStart,
+    onDragEnd,
+    onAnimationStart,
+    onAnimationEnd,
+    ...rest
+  } = props;
+
   return (
-    <button
+    <motion.button
+      type={type}
       className={cn(getButtonClasses(variant, size), className)}
       disabled={disabled || isLoading}
-      {...props}
+      whileHover={reduced || disabled || isLoading ? undefined : { scale: 1.02 }}
+      whileTap={reduced || disabled || isLoading ? undefined : { scale: 0.98 }}
+      transition={pickTransition(reduced, motionTransition.fast)}
+      {...rest}
     >
       {isLoading && (
         <span
           aria-hidden="true"
-          className="h-4 w-4 animate-spin rounded-full border-[2px] border-white/50 border-t-transparent"
+          className="h-4 w-4 animate-spin rounded-full border-[2px] border-current/40 border-t-transparent"
         />
       )}
       {leftIcon && !isLoading ? leftIcon : null}
       <span>{children}</span>
       {rightIcon && !isLoading ? rightIcon : null}
-    </button>
+    </motion.button>
   );
 }

@@ -67,7 +67,7 @@ export function HabitCompletionChartModern() {
             domain={[0, 100]}
           />
           <Tooltip
-            formatter={(v?: number) => `${((v ?? 0) as number).toFixed(0)}%`}
+            formatter={(v) => `${Number(v ?? 0).toFixed(0)}%`}
             contentStyle={{
               borderRadius: 12,
               border: "1px solid rgba(148, 163, 184, 0.6)",

@@ -1,15 +1,36 @@
-import type { HTMLAttributes } from "react";
-import { cn } from "@/lib/cn";
+"use client";
 
-export function Card({ className, ...props }: HTMLAttributes<HTMLDivElement>) {
+import type { HTMLAttributes } from "react";
+import { motion, useReducedMotion } from "framer-motion";
+import { cn } from "@/lib/cn";
+import { motionTransition, pickTransition } from "@/lib/motion";
+
+export function Card({
+  className,
+  children,
+  ...props
+}: HTMLAttributes<HTMLDivElement>) {
+  const reduced = useReducedMotion();
+  const {
+    onDrag,
+    onDragStart,
+    onDragEnd,
+    onAnimationStart,
+    onAnimationEnd,
+    ...rest
+  } = props;
+
   return (
-    <div
+    <motion.div
       className={cn(
-        "rounded-2xl border border-border/60 bg-card/80 shadow-sm backdrop-blur-sm transition-all duration-200 hover:shadow-md",
-        "dark:border-border/40 dark:bg-neutral-900/80",
+        "rounded-2xl border border-border/50 bg-card/70 shadow-sm backdrop-blur-md",
         className,
       )}
-      {...props}
-    />
+      whileHover={reduced ? undefined : { y: -2, transition: motionTransition.fast }}
+      transition={pickTransition(reduced, motionTransition.fast)}
+      {...rest}
+    >
+      {children}
+    </motion.div>
   );
 }

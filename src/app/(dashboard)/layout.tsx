@@ -31,7 +31,7 @@ export default async function DashboardLayout({
   }
 
   return (
-    <div className="flex min-h-screen bg-muted/60">
+    <div className="flex min-h-screen bg-transparent">
       <Sidebar
         items={navItems}
         username={user.username}

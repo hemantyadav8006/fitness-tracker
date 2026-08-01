@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Logo } from "@/components/brand/logo";
 
 const columns: Array<{
   title: string;
@@ -44,10 +45,7 @@ export function MarketingFooter() {
       <div className="mx-auto grid max-w-6xl gap-8 px-4 py-12 sm:grid-cols-2 sm:px-6 lg:grid-cols-5">
         <div className="lg:col-span-1">
           <div className="flex items-center gap-2">
-            <span className="h-9 w-9 rounded-2xl bg-gradient-to-br from-primary/80 to-primary shadow-sm" />
-            <span className="text-sm font-semibold tracking-tight">
-              FitTrack
-            </span>
+            <Logo markClassName="h-9 w-9" />
           </div>
           <p className="mt-3 text-sm text-foreground/60">
             A modern fitness tracker built for clarity.
